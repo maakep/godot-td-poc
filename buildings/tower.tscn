@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://dosh23jvfw6iy"]
+
+[ext_resource type="Texture2D" uid="uid://4s8yq6mcfpcd" path="res://icon.svg" id="1_pqg6l"]
+[ext_resource type="Script" path="res://buildings/tower.gd" id="1_wmhe0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_tj0d0"]
+radius = 101.005
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bbcqx"]
+size = Vector2(36, 36)
+
+[node name="Tower" type="Node2D" groups=["obstacle"]]
+script = ExtResource("1_wmhe0")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 0, 1, 1)
+scale = Vector2(0.328125, 0.328125)
+texture = ExtResource("1_pqg6l")
+
+[node name="AttackArea2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea2D"]
+shape = SubResource("CircleShape2D_tj0d0")
+
+[node name="AttackTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="TowerArea2D" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TowerArea2D"]
+shape = SubResource("RectangleShape2D_bbcqx")

@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://jo20kx21j5e4"]
+
+[ext_resource type="Script" path="res://creeps/enemy.gd" id="1_dofne"]
+[ext_resource type="Texture2D" uid="uid://4s8yq6mcfpcd" path="res://icon.svg" id="2_nn7pv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qd6lv"]
+size = Vector2(130.569, 128.151)
+
+[node name="Enemy" type="Area2D" groups=["enemy"]]
+scale = Vector2(0.46, 0.46)
+collision_layer = 2
+script = ExtResource("1_dofne")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_qd6lv")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_nn7pv")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

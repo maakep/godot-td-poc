@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://rgodpnh3r68b"]
+
+[ext_resource type="Script" path="res://buildings/projectile.gd" id="1_ynjvv"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kkvpv"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_weamx"]
+
+[node name="Projectile" type="Area2D"]
+z_index = 1
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_ynjvv")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_kkvpv")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.918731, 0.447165, 0.582553, 1)
+position = Vector2(4.76837e-07, 4.76837e-07)
+scale = Vector2(14, 14)
+texture = SubResource("CanvasTexture_weamx")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
