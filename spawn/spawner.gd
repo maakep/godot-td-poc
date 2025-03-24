@@ -23,6 +23,7 @@ func enemy_gone():
 	if creeps_to_kill <= 0 && creep_container.get_child_count() <= 1:
 		set_waypoint_random_position()
 		lvl_active = false
+		Events.on_wave_done.emit(Levels.all[lvl])
 
 func _input(e):
 	if e is InputEventKey and e.pressed and e.keycode == KEY_R:

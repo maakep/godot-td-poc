@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c4m6sls4cwsx8" path="res://red.png" id="4_wx62v"]
 [ext_resource type="Script" path="res://camera/camera_controls.gd" id="5_3wsd3"]
 [ext_resource type="Script" path="res://spawn/spawner.gd" id="6_ufcjl"]
-[ext_resource type="Script" path="res://object_placer.gd" id="7_64int"]
+[ext_resource type="Script" path="res://player/player.gd" id="7_64int"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0kglt"]
 texture = ExtResource("1_3uhtl")
@@ -75,7 +75,7 @@ script = ExtResource("6_ufcjl")
 [node name="Goal" type="Node2D" parent="."]
 position = Vector2(1041, 538)
 
-[node name="ObjectPlacer" type="Node2D" parent="."]
+[node name="Player" type="Node2D" parent="."]
 script = ExtResource("7_64int")
 
 [node name="Creeps" type="Node2D" parent="."]

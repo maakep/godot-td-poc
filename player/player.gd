@@ -1,12 +1,18 @@
 extends Node2D
 
-var spawning = false
-var size = 16
+var gold := 20
 
 @onready var tilemap = $"../Layers/TileMapLayer"
 @onready var mousemap = $"../Layers/MouseLayer"
 
 var tower = preload("res://buildings/tower.tscn")
+
+func _ready():
+	Events.on_wave_done.connect(get_wave_bounty)
+
+
+func get_wave_bounty(wave):
+	gold += wave.bounty
 
 func _input(e):	
 	if placable and e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
