@@ -1,5 +1,6 @@
 extends Node2D
 
+var lives = 100
 var gold := 20
 
 @onready var tilemap = $"../Layers/TileMapLayer"
@@ -42,6 +43,9 @@ func _physics_process(delta):
 	last = hovered_cell
 
 func place_obstacle():
+	if gold < 1:
+		return
+	
 	var clicked_cell = tilemap.local_to_map(tilemap.get_local_mouse_position())
 	tilemap.set_cell(clicked_cell, 1, Vector2i(0, 0))
 	var t = tower.instantiate()
@@ -49,4 +53,5 @@ func place_obstacle():
 	t.cell = clicked_cell
 	t.tilemap = tilemap
 	add_child(t)
+	gold = gold - 1
 	Events.on_obstacles_modified.emit(t)

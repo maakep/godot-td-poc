@@ -5,8 +5,8 @@ var path
 var next_target
 var tilemap
 
-var ms = 3
-var hp = 70
+@export var ms: int
+@export var hp: int
 
 func _ready():
 	path = Pathfinder.calc_path(tilemap)

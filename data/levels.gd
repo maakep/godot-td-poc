@@ -1,29 +1,31 @@
 extends Node
 class_name Levels
 
+var ref = Enemies
+
 static var all = [
 	{
-		"unit": "res://creeps/enemy.tscn",
+		"unit": "Goblin",
 		"amount": 5,
 		"bounty": 10,
 	},
 	{
-		"unit": "res://creeps/enemy.tscn",
-		"amount": 6,
+		"unit": "Kobold",
+		"amount": 2,
 		"bounty": 11,
 	},
 	{
-		"unit": "res://creeps/enemy.tscn",
-		"amount": 7,
-		"bounty": 12,
+		"unit": "Goblin King",
+		"amount": 1,
+		"bounty": 40,
 	},
 	{
-		"unit": "res://creeps/enemy.tscn",
+		"unit": "Goblin",
 		"amount": 8,
 		"bounty": 13,
 	},
 	{
-		"unit": "res://creeps/enemy.tscn",
+		"unit": "Goblin",
 		"amount": 9,
 		"bounty": 14,
 	}
