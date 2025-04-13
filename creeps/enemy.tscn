@@ -10,6 +10,8 @@ size = Vector2(130.569, 128.151)
 scale = Vector2(0.46, 0.46)
 collision_layer = 2
 script = ExtResource("1_dofne")
+ms = null
+hp = null
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

@@ -21,12 +21,12 @@ static var all = [
 	},
 	{
 		"unit": "Goblin",
-		"amount": 8,
+		"amount": 100,
 		"bounty": 13,
 	},
 	{
 		"unit": "Goblin",
-		"amount": 9,
+		"amount": 999,
 		"bounty": 14,
 	}
 ]

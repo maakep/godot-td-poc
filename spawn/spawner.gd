@@ -78,7 +78,6 @@ func set_waypoint_random_position():
 			print("nah not there", random_pos)
 			continue
 		
-		print(Levels.waypoints)
 		var too_close_to_another = Levels.waypoints.any(func(x: Vector2i): return random_pos.distance_to(tilemap.local_to_map(x)) < 5)
 		if too_close_to_another:
 			print("too close to another", random_pos)
