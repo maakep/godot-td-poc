@@ -13,7 +13,7 @@ static var all = {
 	},
 	"Goblin King": {
 		"ms": 2,
-		"hp": 1000,
+		"hp": 350,
 		"sprite": preload("res://icon.svg"),
 	}
 }

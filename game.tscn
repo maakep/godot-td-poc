@@ -1,6 +1,7 @@
-[gd_scene load_steps=16 format=4 uid="uid://bhktwydnfg6d3"]
+[gd_scene load_steps=17 format=4 uid="uid://bhktwydnfg6d3"]
 
 [ext_resource type="Texture2D" uid="uid://5n8u2xrsa6n" path="res://spawn/waypoint.png" id="1_3uhtl"]
+[ext_resource type="Script" path="res://misc/pathfinder.gd" id="1_p41ps"]
 [ext_resource type="Texture2D" uid="uid://uesfehw04mg0" path="res://atlas.png" id="2_da1fm"]
 [ext_resource type="Texture2D" uid="uid://cfypdwl0vogqk" path="res://green.png" id="3_6mdlx"]
 [ext_resource type="Texture2D" uid="uid://c4m6sls4cwsx8" path="res://red.png" id="4_wx62v"]
@@ -55,6 +56,7 @@ sources/1 = SubResource("TileSetAtlasSource_oaanw")
 [node name="World" type="Node2D"]
 
 [node name="Layers" type="Node2D" parent="."]
+script = ExtResource("1_p41ps")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="Layers"]
 unique_name_in_owner = true

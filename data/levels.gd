@@ -6,28 +6,37 @@ var ref = Enemies
 static var all = [
 	{
 		"unit": "Goblin",
-		"amount": 5,
+		"amount": 2,
 		"bounty": 10,
+		"spawnInterval": 0.3,
 	},
 	{
 		"unit": "Kobold",
 		"amount": 2,
 		"bounty": 11,
+		"spawnInterval": 0.3,
+		
 	},
 	{
 		"unit": "Goblin King",
-		"amount": 1,
-		"bounty": 40,
+		"amount": 100,
+		"bounty": 5,
+		"spawnInterval": 0.3,
+		
 	},
 	{
 		"unit": "Goblin",
 		"amount": 100,
 		"bounty": 13,
+		"spawnInterval": 0.3,
+		
 	},
 	{
 		"unit": "Goblin",
 		"amount": 999,
 		"bounty": 14,
+		"spawnInterval": 0.3,
+		
 	}
 ]
 

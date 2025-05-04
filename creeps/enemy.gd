@@ -10,7 +10,7 @@ var my_waypoints = Levels.waypoints.duplicate()
 @export var hp: int
 
 func _ready():
-	path = Pathfinder.calc_path(tilemap)
+	path = Pathfinder.instance.calc_path()
 	next_target = path.pop_front()
 	Events.on_obstacles_modified.connect(on_tower_built)
 
@@ -32,8 +32,8 @@ func _physics_process(delta):
 			queue_free()
 
 
-func on_tower_built(obj):
-	var new_path = Pathfinder.calc_path(tilemap, next_target, my_waypoints)
+func on_tower_built(obj, cell):
+	var new_path = Pathfinder.instance.calc_path(next_target, my_waypoints)
 	if !new_path:
 		return
 		

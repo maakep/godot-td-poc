@@ -1,11 +1,13 @@
 extends Node
 class_name Pathfinder
 
-static func calc_path(tilemap, from_global_position = null, waypoints = null):
-	if waypoints == null:
-		waypoints = Levels.waypoints
+static var instance
 
-	var grid = AStarGrid2D.new()
+var grid = AStarGrid2D.new()
+@onready var tilemap = %TileMapLayer
+
+func _ready():	
+	instance = self
 	grid.region = tilemap.get_used_rect()
 	grid.cell_size = Vector2(64, 64)
 	grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
@@ -16,7 +18,19 @@ static func calc_path(tilemap, from_global_position = null, waypoints = null):
 		var tile = tilemap.get_cell_tile_data(cell)
 		if tile and tile.get_custom_data("Obstacle"):
 			grid.set_point_solid(cell)
-			
+	
+	Events.on_obstacles_modified.connect(on_tower_built)
+	
+func on_tower_built(obj, cell):
+	var tile = tilemap.get_cell_tile_data(cell)
+	grid.set_point_solid(cell)
+	grid.update()
+	
+
+func calc_path(from_global_position = null, waypoints = null):
+	if waypoints == null:
+		waypoints = Levels.waypoints
+
 	var path = [from_global_position if from_global_position != null else waypoints[0]]
 	
 	for waypoint in waypoints:

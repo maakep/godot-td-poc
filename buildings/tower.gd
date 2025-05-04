@@ -56,6 +56,7 @@ func get_closest_enemy():
 	return enemies_in_range[0]  
 	
 func take_damage(dmg):
-	tilemap.set_cell(cell, 1, Vector2i(1, 0))
-	Events.on_obstacles_modified.emit(self)
-	queue_free()
+	#tilemap.set_cell(cell, 1, Vector2i(1, 0))
+	#Events.on_obstacles_modified.emit(self)
+	#queue_free()
+	pass

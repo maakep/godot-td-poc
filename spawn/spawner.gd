@@ -4,7 +4,6 @@ extends Node2D
 @onready var creep_container = $"../Creeps"
 var unit = preload("res://creeps/enemy.tscn")
 
-var grid: AStarGrid2D
 var target: Vector2
 
 var lvl := -1
@@ -40,7 +39,7 @@ func spawn():
 	lvl_active = true
 	lvl = lvl + 1
 	
-	var path = Pathfinder.calc_path(%TileMapLayer)
+	var path = Pathfinder.instance.calc_path()
 	
 	if !path:
 		return # some kind of error here, unpathable
@@ -57,7 +56,7 @@ func spawn():
 		u.ms = data.ms
 		u.get_node("Sprite2D").texture = data.sprite
 		creep_container.call_deferred("add_child", u)
-		await get_tree().create_timer(0.7).timeout
+		await get_tree().create_timer(toSpawn.get("spawnInterval", 0.7)).timeout
 
 func set_waypoint_random_position():
 	var lastWaypoint = tilemap.local_to_map(Levels.waypoints.back())

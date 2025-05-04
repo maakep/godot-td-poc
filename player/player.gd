@@ -54,4 +54,4 @@ func place_obstacle():
 	t.tilemap = tilemap
 	add_child(t)
 	gold = gold - 1
-	Events.on_obstacles_modified.emit(t)
+	Events.on_obstacles_modified.emit(t, clicked_cell)
