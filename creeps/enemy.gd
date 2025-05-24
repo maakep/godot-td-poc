@@ -12,7 +12,7 @@ var my_waypoints = Levels.waypoints.duplicate()
 func _ready():
 	path = Pathfinder.instance.calc_path()
 	next_target = path.pop_front()
-	Events.on_obstacles_modified.connect(on_tower_built)
+	Events.on_obstacles_built.connect(on_tower_built)
 
 var waypoints_reached = 0
 func _physics_process(delta):

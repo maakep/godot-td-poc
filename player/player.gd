@@ -47,6 +47,10 @@ func place_obstacle():
 		return
 	
 	var clicked_cell = tilemap.local_to_map(tilemap.get_local_mouse_position())
+	
+	if !validate_path(clicked_cell):
+		return
+		
 	tilemap.set_cell(clicked_cell, 1, Vector2i(0, 0))
 	var t = tower.instantiate()
 	t.position = tilemap.map_to_local(clicked_cell)
@@ -54,4 +58,7 @@ func place_obstacle():
 	t.tilemap = tilemap
 	add_child(t)
 	gold = gold - 1
-	Events.on_obstacles_modified.emit(t, clicked_cell)
+	Events.on_obstacles_built.emit(t, clicked_cell)
+
+func validate_path(cell):
+	return Pathfinder.instance.validate_full_path(cell)

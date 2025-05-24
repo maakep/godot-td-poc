@@ -57,6 +57,6 @@ func get_closest_enemy():
 	
 func take_damage(dmg):
 	#tilemap.set_cell(cell, 1, Vector2i(1, 0))
-	#Events.on_obstacles_modified.emit(self)
+	#Events.on_obstacles_removed.emit(self)
 	#queue_free()
 	pass
