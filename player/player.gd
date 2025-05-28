@@ -1,7 +1,15 @@
 extends Node2D
 
 var lives = 100
-var gold := 20
+
+var _g: int
+var gold: int:
+	get:
+		return _g
+	set(value):
+		_g = value
+		Events.on_gold_change.emit(_g)
+		
 
 @onready var tilemap = $"../Layers/TileMapLayer"
 @onready var mousemap = $"../Layers/MouseLayer"
@@ -10,6 +18,7 @@ var tower = preload("res://buildings/tower.tscn")
 
 func _ready():
 	Events.on_wave_done.connect(get_wave_bounty)
+	gold = 20
 
 
 func get_wave_bounty(wave):

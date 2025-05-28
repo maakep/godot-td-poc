@@ -46,7 +46,7 @@ func spawn():
 	if !path:
 		return # some kind of error here, unpathable
 		
-	visualise_path(path)
+	await visualise_path(path)
 	
 	var toSpawn = Levels.all[lvl]
 	var data = Enemies.all[toSpawn.unit]
@@ -65,8 +65,8 @@ func spawn():
 func visualise_path(path):
 	for coord in path.slice(2):
 		mousemap.set_cell(mousemap.local_to_map(coord), 0, Vector2i(0, 0))
-		get_tree().create_timer(0.45).timeout.connect(func(): mousemap.erase_cell(mousemap.local_to_map(coord)))
-		await get_tree().create_timer(0.1).timeout
+		get_tree().create_timer(0.35).timeout.connect(func(): mousemap.erase_cell(mousemap.local_to_map(coord)))
+		await get_tree().create_timer(0.05).timeout
 		
 func set_waypoint_random_position():
 	var lastWaypoint = tilemap.local_to_map(Levels.waypoints.back())
