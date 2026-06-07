@@ -1,6 +1,5 @@
 extends Area2D
 
-
 var path
 var next_target
 var tilemap
@@ -15,11 +14,10 @@ func _ready():
 	Events.on_obstacles_built.connect(on_tower_built)
 
 var waypoints_reached = 0
-func _physics_process(delta):
+func _physics_process(_delta):
 	global_position = global_position.move_toward(next_target, 1 * ms)
 	
 	if global_position.distance_to(next_target) < 0.01:
-		var matched_waypoint = null
 		for i in range(my_waypoints.size()):
 			if global_position.distance_to(my_waypoints[i]) < 0.5:
 				my_waypoints.remove_at(i)
@@ -27,12 +25,12 @@ func _physics_process(delta):
 		
 		if !path.is_empty():
 			next_target = path.pop_front()
-		else: 
+		else:
 			Events.on_enemy_destination_reached.emit()
 			queue_free()
 
 
-func on_tower_built(obj, cell):
+func on_tower_built(_obj, _cell):
 	var new_path = Pathfinder.instance.calc_path(next_target, my_waypoints)
 	if !new_path:
 		return
@@ -41,8 +39,6 @@ func on_tower_built(obj, cell):
 	next_target = path.pop_front()
 	
 	
-		
-
 func take_damage(dmg: int):
 	if is_queued_for_deletion():
 		return

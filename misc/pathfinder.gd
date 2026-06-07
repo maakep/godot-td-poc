@@ -6,7 +6,7 @@ static var instance: Pathfinder
 var grid = AStarGrid2D.new()
 @onready var tilemap = %TileMapLayer
 
-func _ready():	
+func _ready():
 	instance = self
 	grid.region = tilemap.get_used_rect()
 	grid.cell_size = Vector2(64, 64)
@@ -22,12 +22,12 @@ func _ready():
 	Events.on_obstacles_built.connect(on_tower_built)
 	Events.on_obstacle_removed.connect(on_tower_removed)
 	
-func on_tower_built(obj, cell):
+func on_tower_built(_obj, cell):
 	var tile = tilemap.get_cell_tile_data(cell)
 	grid.set_point_solid(cell)
 	grid.update()
 	
-func on_tower_removed(obj, cell):
+func on_tower_removed(_obj, cell):
 	var tile = tilemap.get_cell_tile_data(cell)
 	grid.set_point_solid(cell, false)
 	grid.update()

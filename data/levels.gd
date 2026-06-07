@@ -11,24 +11,24 @@ static var all = [
 		"spawnInterval": 0.3,
 	},
 	{
-		"unit": "Kobold",
-		"amount": 2,
+		"unit": "Goblin",
+		"amount": 5,
 		"bounty": 11,
 		"spawnInterval": 0.3,
 		
 	},
 	{
-		"unit": "Goblin King",
-		"amount": 100,
+		"unit": "Kobold",
+		"amount": 10,
 		"bounty": 5,
 		"spawnInterval": 0.3,
 		
 	},
 	{
-		"unit": "Goblin",
-		"amount": 100,
+		"unit": "Goblin King",
+		"amount": 3,
 		"bounty": 13,
-		"spawnInterval": 0.3,
+		"spawnInterval": 2,
 		
 	},
 	{
@@ -36,7 +36,6 @@ static var all = [
 		"amount": 999,
 		"bounty": 14,
 		"spawnInterval": 0.3,
-		
 	}
 ]
 

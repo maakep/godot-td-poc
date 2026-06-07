@@ -20,6 +20,9 @@ func _ready():
 	area.connect("area_entered", Callable(self, "_on_area_entered"))
 	area.connect("area_exited", Callable(self,"_on_area_exited"))
 
+
+var attacking = false
+
 func attack():
 	if !attack_timer.is_stopped():
 		return
@@ -39,7 +42,7 @@ func attack():
 	attack()
 	
 
-var attacking = false
+
 
 func _on_area_entered(obj):
 	if obj.is_in_group("enemy"):
