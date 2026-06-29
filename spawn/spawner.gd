@@ -56,6 +56,7 @@ func spawn():
 		var u = unit.instantiate()
 		u.tilemap = tilemap
 		u.global_position = Levels.waypoints[0]
+		u.data = data
 		u.hp = data.hp
 		u.ms = data.ms
 		u.get_node("Sprite2D").texture = data.sprite

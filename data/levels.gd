@@ -2,8 +2,11 @@ extends Node
 class_name Levels
 
 var ref = Enemies
+	
 
 static var all = [
+	wave("Goblin", 20, 10),
+	wave("Goblin King", 1, 1),
 	{
 		"unit": "Goblin",
 		"amount": 2,
@@ -40,3 +43,11 @@ static var all = [
 ]
 
 static var waypoints = [Vector2i(96, 96)]
+
+static func wave(enemyName, amount, bounty, interval = 0.3):
+	return {
+		"unit": enemyName,
+		"amount": amount,
+		"bounty": bounty,
+		"spawnInterval": interval,
+	}

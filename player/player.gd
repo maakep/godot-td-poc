@@ -18,6 +18,7 @@ var tower = preload("res://buildings/tower.tscn")
 
 func _ready():
 	Events.on_wave_done.connect(get_wave_bounty)
+	Events.tower_clicked.connect(on_tower_clicked)
 	gold = 20
 
 
@@ -54,6 +55,8 @@ func _physics_process(delta):
 func place_obstacle():
 	if gold < 1:
 		return
+		
+	placable = false # This updates when changing tile
 	
 	var clicked_cell = tilemap.local_to_map(tilemap.get_local_mouse_position())
 	
@@ -67,7 +70,16 @@ func place_obstacle():
 	t.tilemap = tilemap
 	add_child(t)
 	gold = gold - 1
-	Events.on_obstacles_built.emit(t, clicked_cell)
+	Events.tower_built.emit(t, clicked_cell)
 
 func validate_path(cell):
 	return Pathfinder.instance.validate_full_path(cell)
+	
+func on_tower_clicked(t_obj):
+	var tower_data = t_obj.tower
+	var upgrade = tower_data.upgrades[0] if !tower_data.upgrades.is_empty() else null
+	if upgrade:
+		var upg_data = Towers.get_tower(upgrade)
+		if gold >= upg_data.cost:
+			gold = gold - upg_data.cost
+			t_obj.load_tower(upgrade) # BUG: Sometimes towers shoot every other colour?

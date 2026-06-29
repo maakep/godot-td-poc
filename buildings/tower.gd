@@ -1,7 +1,6 @@
 extends Node2D
 
-@export var attack_radius: float = 100.0
-@export var attack_speed: float = 1
+var attack_targets: int = 1
 
 var enemies_in_range: Array = []
 @onready var area = $AttackArea2D
@@ -11,14 +10,28 @@ var enemies_in_range: Array = []
 var cell
 var tilemap
 
+var tower = Towers.get_tower("arrow")
+
 var proj = preload("res://buildings/projectile.tscn")
 
+# range
+# atk speed
+# sprite
+
+
 func _ready():
-	col.shape.radius = attack_radius
-	attack_timer.wait_time = attack_speed
+	load_tower("arrow")
 	
 	area.connect("area_entered", Callable(self, "_on_area_entered"))
 	area.connect("area_exited", Callable(self,"_on_area_exited"))
+
+func load_tower(id):
+	var tower = Towers.get_tower(id)
+	col.shape.radius = tower.range
+	attack_timer.wait_time = tower.atkspd
+	attack_targets = tower.targets
+	$Sprite2D.texture = tower.sprite
+	self.tower = tower
 
 
 var attacking = false
@@ -26,23 +39,22 @@ var attacking = false
 func attack():
 	if !attack_timer.is_stopped():
 		return
-		
-	var enemy = get_closest_enemy()
-	if !enemy:
+	
+	
+	var enemies = get_closest_enemies(attack_targets)
+	if enemies.size() == 0:
 		return
 	
-	
-	var p = proj.instantiate()
-	p.direction = global_position.direction_to(enemy.global_position)
-	p.damage = 5
-	call_deferred("add_child", p)
+	for i in range(enemies.size()):
+		var p = proj.instantiate()
+		p.direction = global_position.direction_to(enemies[i].global_position)
+		p.load_projectile(tower.proj)
+		call_deferred("add_child", p)
 	
 	attack_timer.start()
 	await attack_timer.timeout
 	attack()
 	
-
-
 
 func _on_area_entered(obj):
 	if obj.is_in_group("enemy"):
@@ -53,13 +65,19 @@ func _on_area_exited(obj):
 	if obj in enemies_in_range:
 		enemies_in_range.erase(obj)
 
-func get_closest_enemy():
+func get_closest_enemies(n = 1):
 	if enemies_in_range.is_empty():
-		return null
-	return enemies_in_range[0]  
+		return []
+		
+	return enemies_in_range.slice(0, n)
 	
 func take_damage(dmg):
 	#tilemap.set_cell(cell, 1, Vector2i(1, 0))
 	#Events.on_obstacles_removed.emit(self)
 	#queue_free()
 	pass
+
+func _on_tower_area_2d_input_event(viewport, event, shape_idx):
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed and event.double_click:
+			Events.tower_clicked.emit(self)

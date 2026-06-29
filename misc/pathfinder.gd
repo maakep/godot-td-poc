@@ -19,27 +19,27 @@ func _ready():
 		if tile and tile.get_custom_data("Obstacle"):
 			grid.set_point_solid(cell)
 	
-	Events.on_obstacles_built.connect(on_tower_built)
-	Events.on_obstacle_removed.connect(on_tower_removed)
+	Events.tower_built.connect(on_obstacle_added)
+	Events.on_obstacle_removed.connect(on_obstacle_removed)
 	
-func on_tower_built(_obj, cell):
+func on_obstacle_added(_obj, cell):
 	var tile = tilemap.get_cell_tile_data(cell)
 	grid.set_point_solid(cell)
 	grid.update()
 	
-func on_tower_removed(_obj, cell):
+func on_obstacle_removed(_obj, cell):
 	var tile = tilemap.get_cell_tile_data(cell)
 	grid.set_point_solid(cell, false)
 	grid.update()
 	
 
 func validate_full_path(cell):
-	on_tower_built(null, cell)
+	on_obstacle_added(null, cell)
 	
 	var res = calc_path()
 	for coord in Levels.waypoints:
 		if coord not in res:
-			on_tower_removed(null, cell)
+			on_obstacle_removed(null, cell)
 			return false
 	
 	return true

@@ -1,24 +1,33 @@
-[gd_scene load_steps=4 format=3 uid="uid://rgodpnh3r68b"]
+[gd_scene format=3 uid="uid://rgodpnh3r68b"]
 
-[ext_resource type="Script" path="res://buildings/projectile.gd" id="1_ynjvv"]
+[ext_resource type="Script" uid="uid://dnrqkjffq2inw" path="res://buildings/projectile.gd" id="1_ynjvv"]
+[ext_resource type="Texture2D" uid="uid://c23xhxvwmfk4" path="res://buildings/projectile_sprites/proj.png" id="2_s7dtn"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_kkvpv"]
 
-[sub_resource type="CanvasTexture" id="CanvasTexture_weamx"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_s7dtn"]
+resource_local_to_scene = true
+radius = 5.0
 
-[node name="Projectile" type="Area2D"]
+[node name="Projectile" type="Area2D" unique_id=560452229]
 z_index = 1
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("1_ynjvv")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1145756593]
 shape = SubResource("CircleShape2D_kkvpv")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(0.918731, 0.447165, 0.582553, 1)
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1376985731]
 position = Vector2(4.76837e-07, 4.76837e-07)
-scale = Vector2(14, 14)
-texture = SubResource("CanvasTexture_weamx")
+scale = Vector2(2, 2)
+texture = ExtResource("2_s7dtn")
+
+[node name="AOE" type="ShapeCast2D" parent="." unique_id=1625752676]
+shape = SubResource("CircleShape2D_s7dtn")
+target_position = Vector2(0, 0)
+max_results = 64
+collision_mask = 2
+collide_with_areas = true
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]
