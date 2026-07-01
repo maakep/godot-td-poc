@@ -10,17 +10,13 @@ var enemies_in_range: Array = []
 var cell
 var tilemap
 
-var tower = Towers.get_tower("arrow")
+var starting_tower = "fire"
+var tower = Towers.get_tower(starting_tower)
 
 var proj = preload("res://buildings/projectile.tscn")
 
-# range
-# atk speed
-# sprite
-
-
 func _ready():
-	load_tower("arrow")
+	load_tower(starting_tower)
 	
 	area.connect("area_entered", Callable(self, "_on_area_entered"))
 	area.connect("area_exited", Callable(self,"_on_area_exited"))

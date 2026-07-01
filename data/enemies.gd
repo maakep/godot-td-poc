@@ -2,7 +2,7 @@ class_name Enemies
 
 static var all = {
 	"Goblin": {
-		"ms": 4,
+		"ms": 2,
 		"hp": 250,
 		"sprite": preload("res://icon.svg"),
 		"resist": [],

@@ -1,3 +1,7 @@
+# TODO:
+# 1. aoe visual indicator?
+# 
+
 extends Node2D
 
 var lives = 100

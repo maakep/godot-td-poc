@@ -1,23 +1,73 @@
-[gd_scene load_steps=4 format=3 uid="uid://jo20kx21j5e4"]
+[gd_scene format=3 uid="uid://jo20kx21j5e4"]
 
-[ext_resource type="Script" path="res://creeps/enemy.gd" id="1_dofne"]
+[ext_resource type="Script" uid="uid://csxu2s48w0s8i" path="res://creeps/enemy.gd" id="1_dofne"]
 [ext_resource type="Texture2D" uid="uid://4s8yq6mcfpcd" path="res://icon.svg" id="2_nn7pv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qd6lv"]
 size = Vector2(130.569, 128.151)
 
-[node name="Enemy" type="Area2D" groups=["enemy"]]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_65qms"]
+bg_color = Color(0.7919998, 0, 0.22029126, 1)
+
+[sub_resource type="Animation" id="Animation_65qms"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_b4iuu"]
+resource_name = "hit"
+length = 0.36666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.06666667, 0.36666667),
+"transitions": PackedFloat32Array(0.25881627, 1),
+"update": 0,
+"values": [Vector2(1.2, 0.9), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_nqy11"]
+_data = {
+&"RESET": SubResource("Animation_65qms"),
+&"hit": SubResource("Animation_b4iuu")
+}
+
+[node name="Enemy" type="Area2D" unique_id=356674979 groups=["enemy"]]
 scale = Vector2(0.46, 0.46)
 collision_layer = 2
 script = ExtResource("1_dofne")
-ms = null
-hp = null
 metadata/_edit_group_ = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2024141731]
 shape = SubResource("RectangleShape2D_qd6lv")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1456047287]
 texture = ExtResource("2_nn7pv")
+
+[node name="HP_bar" type="ProgressBar" parent="." unique_id=1927463011]
+offset_left = -65.21739
+offset_top = -82.608696
+offset_right = 65.21739
+offset_bottom = -73.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_65qms")
+value = 100.0
+show_percentage = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=887521023]
+libraries/ = SubResource("AnimationLibrary_nqy11")
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

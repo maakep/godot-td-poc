@@ -18,7 +18,6 @@ static var all = [
 		"amount": 5,
 		"bounty": 11,
 		"spawnInterval": 0.3,
-		
 	},
 	{
 		"unit": "Kobold",

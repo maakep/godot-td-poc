@@ -15,6 +15,8 @@ func load_projectile(proj):
 	projectile_range = proj.range
 	damage = proj.damage
 	aoe = proj.aoe
+	piercing = proj.piercing
+	
 	if proj.aoe > 0:
 		$AOE.shape.radius = proj.aoe
 		shapecast = $AOE
@@ -42,7 +44,7 @@ func _on_area_entered(enemy):
 		for i in range(targets_hit):
 			var aoe_enemy = shapecast.get_collider(i)
 			
-			if aoe_enemy.has_method("take_damage"):
+			if aoe_enemy != null:
 				aoe_enemy.take_damage(damage)
 				apply_effects(aoe_enemy)
 	

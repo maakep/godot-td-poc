@@ -24,6 +24,7 @@ func enemy_gone():
 	
 	# Wave done!
 	if creeps_to_kill <= 0 && creep_container.get_child_count() <= 1:
+		print("Wave done")
 		set_waypoint_random_position()
 		lvl_active = false
 		Events.on_wave_done.emit(Levels.all[lvl])
@@ -85,7 +86,6 @@ func set_waypoint_random_position():
 			
 		var is_obstacle = cell.get_custom_data("Obstacle")
 		if is_obstacle:
-			print("nah not there", random_pos)
 			continue
 		
 		var too_close_to_another = Levels.waypoints.any(func(x: Vector2i): return random_pos.distance_to(tilemap.local_to_map(x)) < 5)
