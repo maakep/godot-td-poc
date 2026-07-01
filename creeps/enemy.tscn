@@ -56,6 +56,7 @@ metadata/_edit_group_ = true
 shape = SubResource("RectangleShape2D_qd6lv")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1456047287]
+position = Vector2(-4.053116e-06, -5.722046e-06)
 texture = ExtResource("2_nn7pv")
 
 [node name="HP_bar" type="ProgressBar" parent="." unique_id=1927463011]

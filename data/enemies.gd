@@ -18,5 +18,11 @@ static var all = {
 		"hp": 350,
 		"sprite": preload("res://icon.svg"),
 		"resist": ["slow"],
+	},
+	"Goblin Queen": {
+		"ms": 1.2,
+		"hp": 1500,
+		"sprite": preload("res://red.png"),
+		"resist": ["poison", "slow"]
 	}
 }

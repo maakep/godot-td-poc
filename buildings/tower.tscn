@@ -17,6 +17,8 @@ script = ExtResource("1_wmhe0")
 modulate = Color(1, 0, 1, 1)
 scale = Vector2(0.328125, 0.328125)
 texture = ExtResource("1_pqg6l")
+region_enabled = true
+region_rect = Rect2(1, 1, 120, 120)
 
 [node name="AttackArea2D" type="Area2D" parent="." unique_id=1492265133]
 collision_layer = 0

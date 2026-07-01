@@ -7,14 +7,14 @@ static var all = {
 	"arrow": {
 		"atkspd": 1,
 		"range": 200,
-		"sprite": preload("res://buildings/projectile_sprites/proj.png"),
+		"sprite": preload("res://buildings/projectile_sprites/pink.png"),
 		"targets": 1,
 		"cost": 1,
 		"proj": {
 			"damage": 5,
 			"range": 5,
 			"speed": 500,
-			"sprite": preload("res://buildings/projectile_sprites/proj.png"),
+			"sprite": preload("res://buildings/projectile_sprites/pink.png"),
 			"aoe": 0,
 			"piercing": 0,
 			"effects": []
@@ -58,14 +58,14 @@ static var all = {
 	"melee": {
 		"atkspd": 0.2,
 		"range": 45,
-		"sprite": preload("res://buildings/projectile_sprites/proj.png"),
+		"sprite": preload("res://buildings/projectile_sprites/bryellow.png"),
 		"targets": 10,
 		"cost": 1,
 		"proj": {
 			"damage": 5,
 			"range": 5,
 			"speed": 500,
-			"sprite": preload("res://buildings/projectile_sprites/proj.png"),
+			"sprite": preload("res://buildings/projectile_sprites/bryellow.png"),
 			"aoe": 0,
 			"piercing": 0,
 			"effects": []
@@ -92,14 +92,14 @@ static var all = {
 	"poison": {
 		"atkspd": 1,
 		"range": 50,
-		"sprite": preload("res://buildings/projectile_sprites/ice.png"),
+		"sprite": preload("res://buildings/projectile_sprites/purple.png"),
 		"targets": 1,
 		"cost": 2,
 		"proj": {
 			"damage": 1,
 			"range": 50,
 			"speed": 500,
-			"sprite": preload("res://buildings/projectile_sprites/ice.png"),
+			"sprite": preload("res://buildings/projectile_sprites/purple.png")	,
 			"aoe": 30,
 			"piercing": 0,
 			"effects": [ poison(0.5, 40, 1) ]
@@ -109,14 +109,14 @@ static var all = {
 	"fire": {
 		"atkspd": 2,
 		"range": 200,
-		"sprite": preload("res://buildings/projectile_sprites/proj.png"),
+		"sprite": preload("res://buildings/projectile_sprites/orange.png"),
 		"targets": 3,
 		"cost": 2,
 		"proj": {
 			"damage": 10,
 			"range": 50,
 			"speed": 500,
-			"sprite": preload("res://buildings/projectile_sprites/proj.png"),
+			"sprite": preload("res://buildings/projectile_sprites/orange.png"),
 			"aoe": 0,
 			"piercing": 0,
 			"effects": [ burn(10, 10) ]
@@ -126,14 +126,14 @@ static var all = {
 	"cannon": {
 		"atkspd": 2,
 		"range": 200,
-		"sprite": preload("res://buildings/projectile_sprites/greenp.png"),
+		"sprite": preload("res://buildings/projectile_sprites/brown.png"),
 		"targets": 1,
 		"cost": 3,
 		"proj": {
 			"damage": 10,
 			"range": 50,
 			"speed": 500,
-			"sprite": preload("res://buildings/projectile_sprites/greenp.png"),
+			"sprite": preload("res://buildings/projectile_sprites/brown.png"),
 			"aoe": 100,
 			"piercing": 0,
 			"effects": []
