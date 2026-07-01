@@ -29,9 +29,11 @@ func _ready():
 func get_wave_bounty(wave):
 	gold += wave.bounty
 
-func _input(e):	
-	if placable and e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
-		place_obstacle()
+func _input(e):
+	if e is InputEventKey:
+		print(placable, e is InputEventKey, e.pressed, tower_per_key.has(e.physical_keycode))
+	if placable and e is InputEventKey and e.pressed and tower_per_key.has(e.physical_keycode) and not e.echo:
+		place_obstacle(tower_per_key[e.physical_keycode])
 
 var last = Vector2i(0,0)
 var placable = false
@@ -55,9 +57,20 @@ func _physics_process(delta):
 		mousemap.set_cell(hovered_cell, 0, Vector2i(0, 0))
 		
 	last = hovered_cell
+	
+var tower_per_key = {
+	KEY_A: "arrow",
+	KEY_I: "ice",
+	KEY_C: "cannon",
+	KEY_F: "fire",
+	KEY_P: "poison",
+	KEY_M: "melee"
+}
 
-func place_obstacle():
-	if gold < 1:
+func place_obstacle(tower_type):
+	var buying_tower = Towers.get_tower(tower_type)
+	
+	if gold < buying_tower.cost:
 		return
 		
 	placable = false # This updates when changing tile
@@ -72,8 +85,9 @@ func place_obstacle():
 	t.position = tilemap.map_to_local(clicked_cell)
 	t.cell = clicked_cell
 	t.tilemap = tilemap
+	t.tower_id = tower_type
 	add_child(t)
-	gold = gold - 1
+	gold = gold - buying_tower.cost
 	Events.tower_built.emit(t, clicked_cell)
 
 func validate_path(cell):

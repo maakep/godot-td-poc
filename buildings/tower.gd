@@ -10,24 +10,24 @@ var enemies_in_range: Array = []
 var cell
 var tilemap
 
-var starting_tower = "fire"
-var tower = Towers.get_tower(starting_tower)
+var tower_id # set by creator
+var tower # set by load_tower
 
 var proj = preload("res://buildings/projectile.tscn")
 
 func _ready():
-	load_tower(starting_tower)
+	load_tower(tower_id)
 	
 	area.connect("area_entered", Callable(self, "_on_area_entered"))
 	area.connect("area_exited", Callable(self,"_on_area_exited"))
 
 func load_tower(id):
-	var tower = Towers.get_tower(id)
-	col.shape.radius = tower.range
-	attack_timer.wait_time = tower.atkspd
-	attack_targets = tower.targets
-	$Sprite2D.texture = tower.sprite
-	self.tower = tower
+	var twr = Towers.get_tower(id)
+	col.shape.radius = twr.range
+	attack_timer.wait_time = twr.atkspd
+	attack_targets = twr.targets
+	$Sprite2D.texture = twr.sprite
+	tower = twr
 
 
 var attacking = false

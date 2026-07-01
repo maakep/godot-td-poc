@@ -89,6 +89,23 @@ static var all = {
 		},
 		"upgrades": []
 	},
+	"poison": {
+		"atkspd": 1,
+		"range": 50,
+		"sprite": preload("res://buildings/projectile_sprites/ice.png"),
+		"targets": 1,
+		"cost": 2,
+		"proj": {
+			"damage": 1,
+			"range": 50,
+			"speed": 500,
+			"sprite": preload("res://buildings/projectile_sprites/ice.png"),
+			"aoe": 30,
+			"piercing": 0,
+			"effects": [ poison(0.5, 40, 1) ]
+		},
+		"upgrades": []
+	},
 	"fire": {
 		"atkspd": 2,
 		"range": 200,
