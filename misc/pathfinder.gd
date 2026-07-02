@@ -44,6 +44,12 @@ func validate_full_path(cell):
 	
 	return true
 	
+var recalc_queue = []
+func request_recalc(obj):
+	if obj in recalc_queue:
+		return
+	
+	recalc_queue.push_back(obj)
 
 func calc_path(from_global_position = null, waypoints = null):
 	if waypoints == null:
@@ -59,3 +65,23 @@ func calc_path(from_global_position = null, waypoints = null):
 		path.append_array(path_between_waypoints)
 	
 	return path
+
+
+func _physics_process(_delta):
+	var budget = 10
+	
+	print(recalc_queue.size())
+	
+	while budget > 0 and recalc_queue.size() > 0:
+		var enemy = recalc_queue.pop_front()
+		
+		if !is_instance_valid(enemy):
+			continue
+			
+		var new_path = calc_path(enemy.next_target, enemy.my_waypoints)
+		if new_path:
+			enemy.path = new_path
+			enemy.next_target = new_path.pop_front()
+			
+		budget -= 1
+		

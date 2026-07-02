@@ -59,13 +59,14 @@ func _physics_process(_delta):
 
 
 func on_tower_built(_obj, _cell):
-	var new_path = Pathfinder.instance.calc_path(next_target, my_waypoints)
-	if !new_path:
-		return
-		
-	path = new_path
-	next_target = path.pop_front()
-	
+	var new_path = Pathfinder.instance.request_recalc(self)
+	#
+	#if !new_path:
+		#return
+		#
+	#path = new_path
+	#next_target = path.pop_front()
+	#
 	
 func take_damage(dmg: int):
 	if is_queued_for_deletion():
