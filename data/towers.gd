@@ -7,7 +7,7 @@ static var all = {
 	"arrow": {
 		"atkspd": 1,
 		"range": 200,
-		"sprite": preload("res://buildings/projectile_sprites/pink.png"),
+		"sprite": preload("res://buildings/tower_sprites/tower_arrow.png"),
 		"targets": 1,
 		"cost": 1,
 		"proj": {
@@ -24,7 +24,7 @@ static var all = {
 	"arrow 2": {
 		"atkspd": 1,
 		"range": 200,
-		"sprite": preload("res://buildings/projectile_sprites/proj.png"),
+		"sprite": preload("res://buildings/tower_sprites/tower_arrow.png"),
 		"targets": 2,
 		"cost": 1,
 		"proj": {
@@ -41,7 +41,7 @@ static var all = {
 	"arrow 3": {
 		"atkspd": 1,
 		"range": 200,
-		"sprite": preload("res://buildings/projectile_sprites/proj.png"),
+		"sprite": preload("res://buildings/tower_sprites/tower_arrow.png"),
 		"targets": 4,
 		"cost": 1,
 		"proj": {
@@ -75,7 +75,7 @@ static var all = {
 	"ice": {
 		"atkspd": 1,
 		"range": 50,
-		"sprite": preload("res://buildings/projectile_sprites/ice.png"),
+		"sprite": preload("res://buildings/tower_sprites/tower_ice.png"),
 		"targets": 1,
 		"cost": 2,
 		"proj": {
@@ -92,7 +92,7 @@ static var all = {
 	"poison": {
 		"atkspd": 1,
 		"range": 50,
-		"sprite": preload("res://buildings/projectile_sprites/purple.png"),
+		"sprite": preload("res://buildings/tower_sprites/tower_poison.png"),
 		"targets": 1,
 		"cost": 2,
 		"proj": {

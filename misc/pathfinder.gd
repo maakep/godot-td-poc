@@ -25,12 +25,10 @@ func _ready():
 func on_obstacle_added(_obj, cell):
 	var tile = tilemap.get_cell_tile_data(cell)
 	grid.set_point_solid(cell)
-	grid.update()
 	
 func on_obstacle_removed(_obj, cell):
 	var tile = tilemap.get_cell_tile_data(cell)
 	grid.set_point_solid(cell, false)
-	grid.update()
 	
 
 func validate_full_path(cell):
@@ -68,9 +66,7 @@ func calc_path(from_global_position = null, waypoints = null):
 
 
 func _physics_process(_delta):
-	var budget = 10
-	
-	print(recalc_queue.size())
+	var budget = 15
 	
 	while budget > 0 and recalc_queue.size() > 0:
 		var enemy = recalc_queue.pop_front()

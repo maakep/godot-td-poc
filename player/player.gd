@@ -30,14 +30,13 @@ func get_wave_bounty(wave):
 	gold += wave.bounty
 
 func _input(e):
-	if e is InputEventKey:
-		print(placable, e is InputEventKey, e.pressed, tower_per_key.has(e.physical_keycode))
 	if placable and e is InputEventKey and e.pressed and tower_per_key.has(e.physical_keycode) and not e.echo:
 		place_obstacle(tower_per_key[e.physical_keycode])
 
 var last = Vector2i(0,0)
 var placable = false
-func _physics_process(delta):
+
+func _physics_process(_delta):
 	var hovered_cell = tilemap.local_to_map(tilemap.get_local_mouse_position())
 	var data = tilemap.get_cell_tile_data(hovered_cell)
 	
@@ -80,7 +79,7 @@ func place_obstacle(tower_type):
 	if !validate_path(clicked_cell):
 		return
 		
-	tilemap.set_cell(clicked_cell, 1, Vector2i(0, 0))
+	# tilemap.set_cell(clicked_cell, 1, Vector2i(0, 0)) # sets the tile background
 	var t = tower.instantiate()
 	t.position = tilemap.map_to_local(clicked_cell)
 	t.cell = clicked_cell

@@ -1,4 +1,5 @@
 extends Area2D
+class_name Enemy
 
 var path
 var next_target
@@ -80,6 +81,11 @@ func take_damage(dmg: int):
 	
 	if hp <= 0:
 		Events.on_enemy_killed.emit()
+		
+		for effect in active_effects:
+			if effect.has("on_death"):
+				effect.on_death.call()
+		
 		queue_free()
 
 func _on_area_entered(area):
@@ -106,6 +112,7 @@ func add_active_effect(effect, tick, handle_end):
 		"tick": tick,
 		"tick_rate": effect.get("tick_rate", null),
 		"next_tick": ts(effect.get("tick_rate", null)),
+		"on_death": effect.get("on_death", null),
 		"handle_end": handle_end,
 	}
 	
@@ -132,7 +139,7 @@ func _handle_poison(effect):
 			take_damage(effect.dmg),
 		func():
 			ms = data.ms
-			sprite.self_modulate = Color(1, 1, 1)
+			sprite.self_modulate = Color(1, 1, 1)			
 	)
 	
 func _handle_burn(effect):

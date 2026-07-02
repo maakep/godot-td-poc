@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dosh23jvfw6iy"]
 
-[ext_resource type="Texture2D" uid="uid://4s8yq6mcfpcd" path="res://icon.svg" id="1_pqg6l"]
 [ext_resource type="Script" uid="uid://cc3qw3h2r2nje" path="res://buildings/tower.gd" id="1_wmhe0"]
+[ext_resource type="Texture2D" uid="uid://5iru83txnhny" path="res://buildings/tower_sprites/tower_arrow.png" id="2_5auh8"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tj0d0"]
 resource_local_to_scene = true
@@ -14,10 +14,8 @@ size = Vector2(36, 36)
 script = ExtResource("1_wmhe0")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1924897480]
-modulate = Color(1, 0, 1, 1)
-scale = Vector2(0.328125, 0.328125)
-texture = ExtResource("1_pqg6l")
-region_enabled = true
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("2_5auh8")
 region_rect = Rect2(1, 1, 120, 120)
 
 [node name="AttackArea2D" type="Area2D" parent="." unique_id=1492265133]

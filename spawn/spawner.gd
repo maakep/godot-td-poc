@@ -12,9 +12,11 @@ var lvl := -1
 var lvl_active = false
 
 var creeps_to_kill = 999
+var MIN_DISTANCE = 5
+var MAX_DISTANCE = 6
 
 
-func _ready():
+func _ready():		
 	set_waypoint_random_position()
 	Events.on_enemy_destination_reached.connect(enemy_gone)
 	Events.on_enemy_killed.connect(enemy_gone)
@@ -24,7 +26,6 @@ func enemy_gone():
 	
 	# Wave done!
 	if creeps_to_kill <= 0 && creep_container.get_child_count() <= 1:
-		print("Wave done")
 		set_waypoint_random_position()
 		lvl_active = false
 		Events.on_wave_done.emit(Levels.all[lvl])
@@ -75,8 +76,8 @@ func set_waypoint_random_position():
 	
 	while true:
 		var random_pos = Vector2i(
-			lastWaypoint.x + randi_range(-10, 10),
-			lastWaypoint.y + randi_range(-10, 10),
+			lastWaypoint.x + randi_range(-MAX_DISTANCE, MAX_DISTANCE),
+			lastWaypoint.y + randi_range(-MAX_DISTANCE, MAX_DISTANCE),
 		)
 		
 		var cell = tilemap.get_cell_tile_data(random_pos)
@@ -88,7 +89,7 @@ func set_waypoint_random_position():
 		if is_obstacle:
 			continue
 		
-		var too_close_to_another = Levels.waypoints.any(func(x: Vector2i): return random_pos.distance_to(tilemap.local_to_map(x)) < 5)
+		var too_close_to_another = Levels.waypoints.any(func(x: Vector2i): return random_pos.distance_to(tilemap.local_to_map(x)) < MIN_DISTANCE)
 		if too_close_to_another:
 			print("too close to another", random_pos)
 			continue
