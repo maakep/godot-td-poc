@@ -23,6 +23,8 @@ var tower = preload("res://buildings/tower.tscn")
 func _ready():
 	Events.on_wave_done.connect(get_wave_bounty)
 	Events.tower_clicked.connect(on_tower_clicked)
+	Events.on_enemy_killed.connect(func(): gold += 1)
+	Events.on_enemy_destination_reached.connect(func(): gold -= 1)
 	gold = 20
 
 
@@ -63,7 +65,8 @@ var tower_per_key = {
 	KEY_C: "cannon",
 	KEY_F: "fire",
 	KEY_P: "poison",
-	KEY_M: "melee"
+	KEY_M: "melee",
+	KEY_S: "melee stun",
 }
 
 func place_obstacle(tower_type):

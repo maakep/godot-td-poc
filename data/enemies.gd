@@ -3,9 +3,15 @@ class_name Enemies
 static var all = {
 	"Goblin": {
 		"ms": 2,
-		"hp": 250,
+		"hp": 150,
 		"sprite": preload("res://icon.svg"),
-		"resist": [],
+		"resist": ["burn"],
+	},
+	"Goblin Tank": {
+		"ms": 1,
+		"hp": 2000,
+		"sprite": preload("res://icon.svg"),
+		"resist": ["burn"],
 	},
 	"Kobold": {
 		"ms": 5,

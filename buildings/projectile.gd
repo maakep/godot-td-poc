@@ -32,10 +32,13 @@ func _physics_process(delta):
 		
 	global_position += direction * speed * delta
 
+
+var hits = 0
 func _on_area_entered(enemy):		
-	if !enemy.is_in_group("enemy"):
+	if !enemy.is_in_group("enemy") or hits > piercing:
 		return
 	
+	hits += 1
 	apply_effects(enemy)
 	
 	if aoe > 0 and shapecast.is_colliding():
@@ -44,7 +47,7 @@ func _on_area_entered(enemy):
 		for i in range(targets_hit):
 			var aoe_enemy = shapecast.get_collider(i)
 			
-			if aoe_enemy != null:
+			if aoe_enemy != null and aoe_enemy != enemy:
 				aoe_enemy.take_damage(damage)
 				apply_effects(aoe_enemy)
 	

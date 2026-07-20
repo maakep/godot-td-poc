@@ -12,6 +12,8 @@ var data # emeies.gd data object set by creator
 
 @export var ms: float
 @export var hp: float
+var ms_modifiers = {}
+var ms_modifier: float = 1
 
 @onready var hp_bar = $HP_bar
 @onready var anim: AnimationPlayer = $AnimationPlayer
@@ -24,7 +26,7 @@ func _ready():
 
 var waypoints_reached = 0
 func _physics_process(_delta):
-	global_position = global_position.move_toward(next_target, 1 * ms)
+	global_position = global_position.move_toward(next_target, ms * ms_modifier)
 	
 	## -- ## -- ##
 	
@@ -83,13 +85,14 @@ func take_damage(dmg: int):
 		Events.on_enemy_killed.emit()
 		
 		for effect in active_effects:
-			if effect.has("on_death"):
-				effect.on_death.call()
+			var e = active_effects[effect]
+			if e.has("on_death") && e.on_death != null:
+				e.on_death.call()
 		
 		queue_free()
 
 func _on_area_entered(area):
-	area.get_parent().take_damage(100)
+	take_damage(100)
 
 		
 var effect_dict = {
@@ -99,7 +102,7 @@ var effect_dict = {
 }
 
 func apply_effect(effect):
-	effect_dict[effect.name].call(effect)
+	effect_dict[effect.handler].call(effect)
 	
 func ts(dur):
 	if dur == null:
@@ -107,47 +110,68 @@ func ts(dur):
 	return Time.get_ticks_msec() + int(dur * 1000)
 
 func add_active_effect(effect, tick, handle_end):
-	active_effects[effect.name] = {
+	var name = effect.name
+	
+	if effect.stacking:
+		name = name + str(randi() % 1000)
+	
+	active_effects[name] = {
 		"end_time": ts(effect.dur),
 		"tick": tick,
 		"tick_rate": effect.get("tick_rate", null),
 		"next_tick": ts(effect.get("tick_rate", null)),
 		"on_death": effect.get("on_death", null),
-		"handle_end": handle_end,
+		"handle_end": func(): handle_end.call(name),
 	}
 	
-func _handle_slow(effect):
-	ms = data.ms * (1 - effect.val)
-	sprite.self_modulate = Color(0, 0, 1, 1)
+	return name
 	
-	add_active_effect(
-		effect, 
+func recalculate_ms_modifier():
+	var modifier = 1
+	for mod in ms_modifiers:
+		modifier = modifier * (1 - ms_modifiers[mod])
+	
+	ms_modifier = modifier
+
+func _handle_slow(effect):
+	var eff_id = add_active_effect(
+		effect,
 		func():
 			pass, 
-		func():
-			ms = data.ms
+		func(id):
+			ms_modifiers.erase(id)
+			recalculate_ms_modifier()
 			sprite.self_modulate = Color(1, 1, 1)
 	)
+	
+	ms_modifiers[eff_id] = effect.val
+	recalculate_ms_modifier()
+	sprite.self_modulate = Color(0, 0, 1, 1)
+	
 
 func _handle_poison(effect):
-	ms = data.ms * (1 - effect.val)
-	sprite.self_modulate = Color(0.5, 0, 0.5)
-	
-	add_active_effect(
+	var eff_id = add_active_effect(
 		effect,
 		func():
 			take_damage(effect.dmg),
-		func():
-			ms = data.ms
+		func(id):
+			ms_modifiers.erase(id)
+			recalculate_ms_modifier()
 			sprite.self_modulate = Color(1, 1, 1)			
 	)
 	
-func _handle_burn(effect):
+	ms_modifiers[eff_id] = effect.val
+	recalculate_ms_modifier()
+	sprite.self_modulate = Color(0.5, 0, 0.5)
 	
-	add_active_effect(
+func _handle_burn(effect):
+	var _eff_id = add_active_effect(
 			effect,
 			func():
 				take_damage(effect.dmg),
-			func():
+			func(_id):
 				pass,
 		)
+	
+	sprite.self_modulate = Color(0.825, 0.357, 0.212, 1.0)	
+	

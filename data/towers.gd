@@ -72,6 +72,23 @@ static var all = {
 		},
 		"upgrades": []
 	},
+	"melee stun": {
+		"atkspd": 4,
+		"range": 45,
+		"sprite": preload("res://buildings/projectile_sprites/bryellow.png"),
+		"targets": 10,
+		"cost": 1,
+		"proj": {
+			"damage": 5,
+			"range": 5,
+			"speed": 500,
+			"sprite": preload("res://buildings/projectile_sprites/bryellow.png"),
+			"aoe": 0,
+			"piercing": 0,
+			"effects": [ slow(1, 1)]
+		},
+		"upgrades": []
+	},
 	"ice": {
 		"atkspd": 1,
 		"range": 50,
@@ -85,7 +102,7 @@ static var all = {
 			"sprite": preload("res://buildings/projectile_sprites/ice.png"),
 			"aoe": 30,
 			"piercing": 0,
-			"effects": [ slow(0.3, 1) ]
+			"effects": [ slow(0.3, 1, true) ]
 		},
 		"upgrades": []
 	},
@@ -102,7 +119,7 @@ static var all = {
 			"sprite": preload("res://buildings/projectile_sprites/purple.png")	,
 			"aoe": 30,
 			"piercing": 0,
-			"effects": [ poison(0.5, 40, 1) ]
+			"effects": [ poison(0.5, 40, 1), ]
 		},
 		"upgrades": []
 	},
@@ -143,10 +160,9 @@ static var all = {
 }
 
 
-static func burn(dmg, dur, id = ""):
-	return { "name": "burn" + id, "dmg": dmg, "dur": dur, "tick_rate": 1 }
-static func slow(val, dur, id = ""):
-	return { "name": "slow" + id, "val": val, "dur": dur}
-static func poison(val, dmg, dur, id = ""):
-	return { "name": "poison" + id, "val": val, "dmg": dmg, "dur": dur, "tick_rate": 1}
-	
+static func burn(dmg, dur, stacking = false, id = ""):
+	return { "handler": "burn", "name": "burn" + id, "stacking": stacking, "dmg": dmg, "dur": dur, "tick_rate": 1 }
+static func slow(val, dur, stacking = false, id = ""):
+	return { "handler": "slow", "name": "slow" + id, "stacking": stacking, "val": val, "dur": dur}
+static func poison(val, dmg, dur, stacking = false, id = ""):
+	return { "handler": "poison", "name": "poison" + id, "stacking": stacking, "val": val, "dmg": dmg, "dur": dur, "tick_rate": 1}

@@ -4,7 +4,7 @@ class_name Pathfinder
 static var instance: Pathfinder
 
 var grid = AStarGrid2D.new()
-@onready var tilemap = %TileMapLayer
+@onready var tilemap: TileMapLayer = %TileMapLayer
 
 func _ready():
 	instance = self
@@ -13,6 +13,11 @@ func _ready():
 	grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
 	
 	grid.update()
+	
+	var map = Levels.generate_obstacles(65, 58)
+	
+	for cell in map:
+		tilemap.set_cell(cell, 1, Vector2i(0, 0))
 	
 	for cell in tilemap.get_used_cells():
 		var tile = tilemap.get_cell_tile_data(cell)
@@ -48,6 +53,10 @@ func request_recalc(obj):
 		return
 	
 	recalc_queue.push_back(obj)
+
+func v(x,y): return Vector2i(x, y)
+		
+		
 
 func calc_path(from_global_position = null, waypoints = null):
 	if waypoints == null:
