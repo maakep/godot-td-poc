@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://c7l3gmt7um1rw" path="res://spawn/spawner.gd" id="6_ufcjl"]
 [ext_resource type="Script" uid="uid://w62ym3parlfc" path="res://player/player.gd" id="7_64int"]
 [ext_resource type="Script" uid="uid://bwptv50vdh3dl" path="res://gold_ui.gd" id="9_62qko"]
+[ext_resource type="Script" uid="uid://dvbo4kq66vspy" path="res://ui/tower_ui_container.gd" id="10_hve3p"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0kglt"]
 texture = ExtResource("1_3uhtl")
@@ -110,26 +111,25 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="FlowContainer" type="FlowContainer" parent="CanvasLayer" unique_id=511086944]
+[node name="TowerUIPanel" type="PanelContainer" parent="CanvasLayer" unique_id=640093627]
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 11.0
-offset_top = -82.0
-offset_right = -19.0
+offset_left = 10.0
+offset_top = -85.0
+offset_right = -14.0
+offset_bottom = -13.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_constants/h_separation = 15
 
-[node name="TextureButton" type="TextureButton" parent="CanvasLayer/FlowContainer" unique_id=1061961982]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/TowerUIPanel" unique_id=859461271]
 layout_mode = 2
-texture_normal = ExtResource("3_6mdlx")
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
 
-[node name="TextureButton2" type="TextureButton" parent="CanvasLayer/FlowContainer" unique_id=1295571795]
+[node name="HFlowContainer" type="HFlowContainer" parent="CanvasLayer/TowerUIPanel/MarginContainer" unique_id=553861895]
 layout_mode = 2
-texture_normal = ExtResource("3_6mdlx")
-
-[node name="TextureButton3" type="TextureButton" parent="CanvasLayer/FlowContainer" unique_id=574975993]
-layout_mode = 2
-texture_normal = ExtResource("3_6mdlx")
+script = ExtResource("10_hve3p")

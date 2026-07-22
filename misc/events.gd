@@ -8,3 +8,6 @@ signal on_wave_done(wave)
 signal on_gold_change(g: int)
 
 signal tower_clicked(tower: Node2D)
+
+# UI
+signal on_tower_ui_clicked(tower_id: String)

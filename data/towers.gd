@@ -10,9 +10,10 @@ static var all = {
 		"sprite": preload("res://buildings/tower_sprites/tower_arrow.png"),
 		"targets": 1,
 		"cost": 1,
+		"buyable": true,
 		"proj": {
 			"damage": 5,
-			"range": 5,
+			"range": 2,
 			"speed": 500,
 			"sprite": preload("res://buildings/projectile_sprites/pink.png"),
 			"aoe": 0,
@@ -27,6 +28,7 @@ static var all = {
 		"sprite": preload("res://buildings/tower_sprites/tower_arrow.png"),
 		"targets": 2,
 		"cost": 1,
+		"buyable": false,
 		"proj": {
 			"damage": 10,
 			"range": 5,
@@ -44,6 +46,7 @@ static var all = {
 		"sprite": preload("res://buildings/tower_sprites/tower_arrow.png"),
 		"targets": 4,
 		"cost": 1,
+		"buyable": false,
 		"proj": {
 			"damage": 15,
 			"range": 5,
@@ -61,6 +64,7 @@ static var all = {
 		"sprite": preload("res://buildings/projectile_sprites/bryellow.png"),
 		"targets": 10,
 		"cost": 1,
+		"buyable": true,
 		"proj": {
 			"damage": 5,
 			"range": 5,
@@ -78,6 +82,7 @@ static var all = {
 		"sprite": preload("res://buildings/projectile_sprites/bryellow.png"),
 		"targets": 10,
 		"cost": 1,
+		"buyable": true,
 		"proj": {
 			"damage": 5,
 			"range": 5,
@@ -95,6 +100,7 @@ static var all = {
 		"sprite": preload("res://buildings/tower_sprites/tower_ice.png"),
 		"targets": 1,
 		"cost": 2,
+		"buyable": true,
 		"proj": {
 			"damage": 1,
 			"range": 50,
@@ -112,6 +118,7 @@ static var all = {
 		"sprite": preload("res://buildings/tower_sprites/tower_poison.png"),
 		"targets": 1,
 		"cost": 2,
+		"buyable": true,
 		"proj": {
 			"damage": 1,
 			"range": 50,
@@ -129,6 +136,7 @@ static var all = {
 		"sprite": preload("res://buildings/projectile_sprites/orange.png"),
 		"targets": 3,
 		"cost": 2,
+		"buyable": true,
 		"proj": {
 			"damage": 10,
 			"range": 50,
@@ -146,6 +154,7 @@ static var all = {
 		"sprite": preload("res://buildings/projectile_sprites/brown.png"),
 		"targets": 1,
 		"cost": 3,
+		"buyable": true,
 		"proj": {
 			"damage": 10,
 			"range": 50,

@@ -14,7 +14,14 @@ func _ready():
 	
 	grid.update()
 	
-	var map = Levels.generate_obstacles(65, 58)
+	var map = Levels.generate_obstacles(65, 57)
+	map.append_array([
+		Vector2i(-1, 0),
+		Vector2i(0, 1),
+		Vector2i(1, 0),
+		
+	])
+	
 	
 	for cell in map:
 		tilemap.set_cell(cell, 1, Vector2i(0, 0))
@@ -23,6 +30,9 @@ func _ready():
 		var tile = tilemap.get_cell_tile_data(cell)
 		if tile and tile.get_custom_data("Obstacle"):
 			grid.set_point_solid(cell)
+
+	
+	
 	
 	Events.tower_built.connect(on_obstacle_added)
 	Events.on_obstacle_removed.connect(on_obstacle_removed)
@@ -54,10 +64,9 @@ func request_recalc(obj):
 	
 	recalc_queue.push_back(obj)
 
-func v(x,y): return Vector2i(x, y)
+func v(x, y): return Vector2i(x, y)
 		
 		
-
 func calc_path(from_global_position = null, waypoints = null):
 	if waypoints == null:
 		waypoints = Levels.waypoints
@@ -89,4 +98,3 @@ func _physics_process(_delta):
 			enemy.next_target = new_path.pop_front()
 			
 		budget -= 1
-		

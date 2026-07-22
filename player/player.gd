@@ -20,11 +20,14 @@ var gold: int:
 
 var tower = preload("res://buildings/tower.tscn")
 
+var selected_tower_id_for_placing = null
+
 func _ready():
 	Events.on_wave_done.connect(get_wave_bounty)
 	Events.tower_clicked.connect(on_tower_clicked)
-	Events.on_enemy_killed.connect(func(): gold += 1)
-	Events.on_enemy_destination_reached.connect(func(): gold -= 1)
+	Events.on_enemy_killed.connect(func(): gold += 1) # should be bounty per enemy?
+	Events.on_enemy_destination_reached.connect(func(): lives -= 1)
+	Events.on_tower_ui_clicked.connect(func(t_id): selected_tower_id_for_placing = t_id)
 	gold = 20
 
 
@@ -32,21 +35,30 @@ func get_wave_bounty(wave):
 	gold += wave.bounty
 
 func _input(e):
-	if placable and e is InputEventKey and e.pressed and tower_per_key.has(e.physical_keycode) and not e.echo:
-		place_obstacle(tower_per_key[e.physical_keycode])
+	if selected_tower_id_for_placing and placable and e is InputEventMouseButton and e.button_index == 1 and e.pressed:
+		place_obstacle(selected_tower_id_for_placing)
+		return
+	
+	if e is InputEventMouseButton and e.button_index == 2 and e.pressed:
+		selected_tower_id_for_placing = null
+		mousemap.set_cell(last_hovered_cell)
+		return
 
-var last = Vector2i(0,0)
+var last_hovered_cell = Vector2i(0,0)
 var placable = false
 
 func _physics_process(_delta):
+	if !selected_tower_id_for_placing:
+		return
+		
 	var hovered_cell = tilemap.local_to_map(tilemap.get_local_mouse_position())
 	var data = tilemap.get_cell_tile_data(hovered_cell)
 	
 	if !data:
 		return
 	
-	if last != hovered_cell:
-		mousemap.set_cell(last)
+	if last_hovered_cell != hovered_cell:
+		mousemap.set_cell(last_hovered_cell)
 	else:
 		return
 	
@@ -57,17 +69,7 @@ func _physics_process(_delta):
 		placable = true
 		mousemap.set_cell(hovered_cell, 0, Vector2i(0, 0))
 		
-	last = hovered_cell
-	
-var tower_per_key = {
-	KEY_A: "arrow",
-	KEY_I: "ice",
-	KEY_C: "cannon",
-	KEY_F: "fire",
-	KEY_P: "poison",
-	KEY_M: "melee",
-	KEY_S: "melee stun",
-}
+	last_hovered_cell = hovered_cell
 
 func place_obstacle(tower_type):
 	var buying_tower = Towers.get_tower(tower_type)

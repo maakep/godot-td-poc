@@ -25,8 +25,8 @@ func _ready():
 	Events.tower_built.connect(on_tower_built)
 
 var waypoints_reached = 0
-func _physics_process(_delta):
-	global_position = global_position.move_toward(next_target, ms * ms_modifier)
+func _physics_process(delta):
+	global_position = global_position.move_toward(next_target, ms * ms_modifier * delta)
 	
 	## -- ## -- ##
 	

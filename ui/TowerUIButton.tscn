@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://dxoibr7j78b8k"]
+
+[ext_resource type="Script" uid="uid://cnsxp8ebb578o" path="res://ui/tower_ui_button.gd" id="1_hvd25"]
+[ext_resource type="Texture2D" uid="uid://5iru83txnhny" path="res://buildings/tower_sprites/tower_arrow.png" id="2_eomhb"]
+[ext_resource type="Texture2D" uid="uid://cfypdwl0vogqk" path="res://green.png" id="3_a2g2u"]
+
+[node name="TowerUiButton" type="Control" unique_id=2098094705]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 128.0
+offset_bottom = 128.0
+script = ExtResource("1_hvd25")
+
+[node name="TextureButton" type="TextureButton" parent="." unique_id=1660543103]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("2_eomhb")
+texture_pressed = ExtResource("3_a2g2u")
+ignore_texture_size = true
+stretch_mode = 0
+
+[connection signal="pressed" from="TextureButton" to="." method="_on_pressed"]

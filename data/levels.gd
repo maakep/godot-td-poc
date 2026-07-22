@@ -13,7 +13,7 @@ static var all = [
 	wave("Kobold", 20, 10),
 ]
 
-static var waypoints = [Vector2i(96, 96)]
+static var waypoints = [Vector2i(32, 32)]
 
 static func wave(enemyName, amount, bounty, interval = 0.3):
 	return {
@@ -31,7 +31,6 @@ static func generate_obstacles(
 		smoothing_iterations := 5,
 		seed := randi()
 	) -> Array:
-
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed
 	
@@ -47,11 +46,11 @@ static func generate_obstacles(
 			grid[x].append(rng.randf() < fill_percent)
 
 	# Keep border empty
-	for x in width:
+	for x in grid_width:
 		grid[x][0] = false
 		grid[x][height - 1] = false
 
-	for y in height:
+	for y in grid_height:
 		grid[0][y] = false
 		grid[width - 1][y] = false
 
@@ -64,9 +63,7 @@ static func generate_obstacles(
 
 	for gx in grid_width:
 		for gy in grid_height:
-
 			if grid[gx][gy]:
-
 				var world_x = gx - width
 				var world_y = gy - height
 
@@ -79,7 +76,6 @@ static func generate_obstacles(
 	return map
 
 static func smooth_grid(grid: Array) -> Array:
-
 	var width = grid.size()
 	var height = grid[0].size()
 
@@ -89,7 +85,6 @@ static func smooth_grid(grid: Array) -> Array:
 		new_grid.append([])
 
 		for y in height:
-
 			var neighbours = count_neighbours(grid, x, y)
 
 			if neighbours > 4:
@@ -102,12 +97,10 @@ static func smooth_grid(grid: Array) -> Array:
 	return new_grid
 	
 static func count_neighbours(grid, cx, cy):
-
 	var count := 0
 
 	for dx in range(-1, 2):
 		for dy in range(-1, 2):
-
 			if dx == 0 and dy == 0:
 				continue
 
