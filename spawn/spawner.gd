@@ -43,6 +43,9 @@ func spawn():
 	lvl_active = true
 	lvl = lvl + 1
 	
+	var wave = Levels.all[lvl]
+	var creeps_array = wave.creeps
+	
 	var path = Pathfinder.instance.calc_path()
 	
 	if !path:
@@ -50,26 +53,31 @@ func spawn():
 		
 	await visualise_path(path)
 	
-	var toSpawn = Levels.all[lvl]
-	var data = Enemies.all[toSpawn.unit]
-	creeps_to_kill = toSpawn.amount
+	creeps_to_kill = creeps_array.reduce(func(sum, item): return sum + item.amount, 0)
 	
-	for i in range(toSpawn.amount):
-		var u = unit.instantiate()
-		u.tilemap = tilemap
-		u.global_position = Levels.waypoints[0]
-		u.data = data
-		u.hp = data.hp
-		u.ms = data.ms
-		u.get_node("Sprite2D").texture = data.sprite
-		creep_container.call_deferred("add_child", u)
-		await get_tree().create_timer(toSpawn.get("spawnInterval", 0.7)).timeout
+	for c in creeps_array:
+		await get_tree().create_timer(1).timeout
+		
+		for i in range(c.amount):
+			var data = Enemies.all[c.unit]
+			
+			var u = unit.instantiate()
+			u.tilemap = tilemap
+			u.global_position = Levels.waypoints[0]
+			u.data = data
+			u.hp = data.hp
+			u.ms = data.ms
+			u.flying = data.attributes.has("flying")
+			
+			u.get_node("Sprite2D").texture = data.sprite
+			creep_container.call_deferred("add_child", u)
+			await get_tree().create_timer(c.get("spawnInterval", 0.3)).timeout
 
 func visualise_path(path):
 	for coord in path.slice(2):
 		mousemap.set_cell(mousemap.local_to_map(coord), 0, Vector2i(0, 0))
 		get_tree().create_timer(0.35).timeout.connect(func(): mousemap.erase_cell(mousemap.local_to_map(coord)))
-		await get_tree().create_timer(0.05).timeout
+		await get_tree().create_timer(0.03).timeout
 		
 func set_waypoint_random_position():
 	var lastWaypoint = tilemap.local_to_map(Levels.waypoints.back())

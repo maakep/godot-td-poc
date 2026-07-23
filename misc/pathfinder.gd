@@ -67,9 +67,12 @@ func request_recalc(obj):
 func v(x, y): return Vector2i(x, y)
 		
 		
-func calc_path(from_global_position = null, waypoints = null):
+func calc_path(from_global_position = null, waypoints = null, flying = false):
 	if waypoints == null:
 		waypoints = Levels.waypoints
+	
+	if flying:
+		return waypoints.duplicate()
 
 	var path = [from_global_position if from_global_position != null else waypoints[0]]
 	
@@ -92,7 +95,7 @@ func _physics_process(_delta):
 		if !is_instance_valid(enemy):
 			continue
 			
-		var new_path = calc_path(enemy.next_target, enemy.my_waypoints)
+		var new_path = calc_path(enemy.next_target, enemy.my_waypoints, enemy.flying)
 		if new_path:
 			enemy.path = new_path
 			enemy.next_target = new_path.pop_front()

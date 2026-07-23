@@ -34,7 +34,7 @@ func _ready():
 func get_wave_bounty(wave):
 	gold += wave.bounty
 
-func _input(e):
+func _unhandled_input(e):
 	if selected_tower_id_for_placing and placable and e is InputEventMouseButton and e.button_index == 1 and e.pressed:
 		place_obstacle(selected_tower_id_for_placing)
 		return

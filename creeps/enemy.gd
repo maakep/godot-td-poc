@@ -15,12 +15,14 @@ var data # emeies.gd data object set by creator
 var ms_modifiers = {}
 var ms_modifier: float = 1
 
+var flying = false
+
 @onready var hp_bar = $HP_bar
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var sprite: Sprite2D = $Sprite2D
 
 func _ready():
-	path = Pathfinder.instance.calc_path()
+	path = Pathfinder.instance.calc_path(null, null, flying)
 	next_target = path.pop_front()
 	Events.tower_built.connect(on_tower_built)
 
@@ -62,15 +64,9 @@ func _physics_process(delta):
 
 
 func on_tower_built(_obj, _cell):
-	var new_path = Pathfinder.instance.request_recalc(self)
-	#
-	#if !new_path:
-		#return
-		#
-	#path = new_path
-	#next_target = path.pop_front()
-	#
-	
+	if !flying:
+		Pathfinder.instance.request_recalc(self)
+
 func take_damage(dmg: int):
 	if is_queued_for_deletion():
 		return
@@ -92,7 +88,8 @@ func take_damage(dmg: int):
 		queue_free()
 
 func _on_area_entered(area):
-	take_damage(100)
+	pass
+	#take_damage(100)
 
 		
 var effect_dict = {

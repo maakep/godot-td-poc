@@ -2,27 +2,28 @@ extends Node
 class_name Levels
 
 var ref = Enemies
-	
 
 static var all = [
-	wave("Goblin", 20, 200, 0.5),
-	wave("Goblin Tank", 1, 100),
-	wave("Goblin", 999, 10, 0.1),
-	wave("Goblin Queen", 1, 100),
-	wave("Goblin King", 1, 1),
-	wave("Kobold", 20, 10),
+	wave(10, [c("Bee", 3), c("Bee", 3), c("Bee", 3)]),
+	wave(15, [c("Bee", 40)]),
+	wave(50, [c("Goblin", 5), c("Goblin King", 1, 1), c("Kobold", 5)]),
+	wave(10, [c("Goblin Tank", 1)]),
+	wave(100, [c("Goblin Queen", 1)]),
 ]
 
 static var waypoints = [Vector2i(32, 32)]
 
-static func wave(enemyName, amount, bounty, interval = 0.3):
+static func wave(wave_bounty, creeps):
+	return {
+		"bounty": wave_bounty,
+		"creeps": creeps,
+	}
+static func c(enemyName, amount, interval = 0.3):
 	return {
 		"unit": enemyName,
 		"amount": amount,
-		"bounty": bounty,
 		"spawnInterval": interval,
 	}
-
 
 static func generate_obstacles(
 		width: int,
