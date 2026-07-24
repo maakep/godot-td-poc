@@ -10,19 +10,26 @@ var enemies_in_range: Array = []
 var cell
 var tilemap
 
+var faction_id # set by creator
 var tower_id # set by creator
 var tower # set by load_tower
 
 var proj = preload("res://buildings/projectile.tscn")
 
 func _ready():
-	load_tower(tower_id)
+	load_tower(faction_id, tower_id)
 	
 	area.connect("area_entered", Callable(self, "_on_area_entered"))
 	area.connect("area_exited", Callable(self,"_on_area_exited"))
 
-func load_tower(id):
-	var twr = Towers.get_tower(id)
+func load_tower(new_faction_id, new_tower_id):
+	var twr = Towers.get_tower(new_faction_id, new_tower_id)
+	if !twr:
+		push_error("Unknown tower: %s/%s" % [new_faction_id, new_tower_id])
+		return
+
+	faction_id = new_faction_id
+	tower_id = new_tower_id
 	col.shape.radius = twr.range
 	attack_timer.wait_time = twr.atkspd
 	attack_targets = twr.targets

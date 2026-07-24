@@ -29,6 +29,7 @@ var gold: int:
 
 var tower = preload("res://buildings/tower.tscn")
 
+var selected_tower_faction_for_placing = null
 var selected_tower_id_for_placing = null
 var range_indicator
 
@@ -44,9 +45,10 @@ func _ready():
 	gold = 20
 
 
-func select_tower_for_placing(tower_id):
+func select_tower_for_placing(faction_id, tower_id):
+	selected_tower_faction_for_placing = faction_id
 	selected_tower_id_for_placing = tower_id
-	var tower_data = Towers.get_tower(tower_id)
+	var tower_data = Towers.get_tower(faction_id, tower_id)
 	range_indicator.set_tower_range(tower_data.range)
 	range_indicator.visible = true
 
@@ -56,10 +58,11 @@ func get_wave_bounty(wave):
 
 func _unhandled_input(e):
 	if selected_tower_id_for_placing and placable and e is InputEventMouseButton and e.button_index == 1 and e.pressed:
-		place_obstacle(selected_tower_id_for_placing)
+		place_obstacle(selected_tower_faction_for_placing, selected_tower_id_for_placing)
 		return
 	
 	if e is InputEventMouseButton and e.button_index == 2 and e.pressed:
+		selected_tower_faction_for_placing = null
 		selected_tower_id_for_placing = null
 		range_indicator.visible = false
 		mousemap.set_cell(last_hovered_cell)
@@ -96,12 +99,17 @@ func _physics_process(_delta):
 		if cell_changed:
 			mousemap.set_cell(hovered_cell, 0, Vector2i(0, 0))
 
-	range_indicator.set_placement_valid(placable and gold >= Towers.get_tower(selected_tower_id_for_placing).cost)
+	range_indicator.set_placement_valid(
+		placable and gold >= Towers.get_tower(
+			selected_tower_faction_for_placing,
+			selected_tower_id_for_placing
+		).cost
+	)
 		
 	last_hovered_cell = hovered_cell
 
-func place_obstacle(tower_type):
-	var buying_tower = Towers.get_tower(tower_type)
+func place_obstacle(faction_id, tower_type):
+	var buying_tower = Towers.get_tower(faction_id, tower_type)
 	
 	if gold < buying_tower.cost:
 		return
@@ -118,6 +126,7 @@ func place_obstacle(tower_type):
 	t.position = tilemap.map_to_local(clicked_cell)
 	t.cell = clicked_cell
 	t.tilemap = tilemap
+	t.faction_id = faction_id
 	t.tower_id = tower_type
 	add_child(t)
 	gold = gold - buying_tower.cost
@@ -130,7 +139,7 @@ func on_tower_clicked(t_obj):
 	var tower_data = t_obj.tower
 	var upgrade = tower_data.upgrades[0] if !tower_data.upgrades.is_empty() else null
 	if upgrade:
-		var upg_data = Towers.get_tower(upgrade)
+		var upg_data = Towers.get_tower(t_obj.faction_id, upgrade)
 		if gold >= upg_data.cost:
 			gold = gold - upg_data.cost
-			t_obj.load_tower(upgrade) # BUG: Sometimes towers shoot every other colour?
+			t_obj.load_tower(t_obj.faction_id, upgrade) # BUG: Sometimes towers shoot every other colour?

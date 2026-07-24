@@ -1,177 +1,202 @@
 class_name Towers
 
-static func get_tower(id): 
-	return all.get(id)
+static func get_faction(id):
+	return factions.get(id)
 
-static var all = {
-	"arrow": {
-		"atkspd": 1,
-		"range": 200,
-		"sprite": preload("res://buildings/tower_sprites/tower_arrow.png"),
-		"targets": 1,
-		"cost": 1,
-		"buyable": true,
-		"proj": {
-			"damage": 5,
-			"range": 2,
-			"speed": 500,
-			"sprite": preload("res://buildings/projectile_sprites/pink.png"),
-			"aoe": 0,
-			"piercing": 0,
-			"effects": []
-		},
-		"upgrades": ["arrow 2"]
+
+static func get_tower(faction_id, id):
+	var faction = get_faction(faction_id)
+	if !faction:
+		return null
+
+	return faction.towers.get(id)
+
+
+static var factions = {
+	"elemental": {
+		"display_name": "Elemental",
+		"description": "Elemental towers use fire, frost, and poison.",
+		"towers": {
+			"ice": {
+				"atkspd": 1,
+				"range": 50,
+				"sprite": preload("res://buildings/tower_sprites/tower_ice.png"),
+				"targets": 1,
+				"cost": 2,
+				"buyable": true,
+				"proj": {
+					"damage": 1,
+					"range": 50,
+					"speed": 500,
+					"sprite": preload("res://buildings/projectile_sprites/ice.png"),
+					"aoe": 30,
+					"piercing": 0,
+					"effects": [slow(0.3, 1, true)]
+				},
+				"upgrades": []
+			},
+			"poison": {
+				"atkspd": 1,
+				"range": 50,
+				"sprite": preload("res://buildings/tower_sprites/tower_poison.png"),
+				"targets": 1,
+				"cost": 2,
+				"buyable": true,
+				"proj": {
+					"damage": 1,
+					"range": 50,
+					"speed": 500,
+					"sprite": preload("res://buildings/projectile_sprites/purple.png"),
+					"aoe": 30,
+					"piercing": 0,
+					"effects": [poison(0.5, 40, 1)]
+				},
+				"upgrades": []
+			},
+			"fire": {
+				"atkspd": 2,
+				"range": 200,
+				"sprite": preload("res://buildings/projectile_sprites/orange.png"),
+				"targets": 3,
+				"cost": 2,
+				"buyable": true,
+				"proj": {
+					"damage": 10,
+					"range": 50,
+					"speed": 500,
+					"sprite": preload("res://buildings/projectile_sprites/orange.png"),
+					"aoe": 0,
+					"piercing": 0,
+					"effects": [burn(10, 10)]
+				},
+				"upgrades": []
+			}
+		}
 	},
-	"arrow 2": {
-		"atkspd": 1,
-		"range": 200,
-		"sprite": preload("res://buildings/tower_sprites/tower_arrow.png"),
-		"targets": 2,
-		"cost": 1,
-		"buyable": false,
-		"proj": {
-			"damage": 10,
-			"range": 5,
-			"speed": 500,
-			"sprite": preload("res://buildings/projectile_sprites/proj.png"),
-			"aoe": 0,
-			"piercing": 0,
-			"effects": []
-		},
-		"upgrades": ["arrow 3"]
-	},
-	"arrow 3": {
-		"atkspd": 1,
-		"range": 200,
-		"sprite": preload("res://buildings/tower_sprites/tower_arrow.png"),
-		"targets": 4,
-		"cost": 1,
-		"buyable": false,
-		"proj": {
-			"damage": 15,
-			"range": 5,
-			"speed": 500,
-			"sprite": preload("res://buildings/projectile_sprites/proj.png"),
-			"aoe": 0,
-			"piercing": 0,
-			"effects": []
-		},
-		"upgrades": []
-	},
-	"melee": {
-		"atkspd": 0.2,
-		"range": 45,
-		"sprite": preload("res://buildings/projectile_sprites/bryellow.png"),
-		"targets": 10,
-		"cost": 1,
-		"buyable": true,
-		"proj": {
-			"damage": 5,
-			"range": 5,
-			"speed": 500,
-			"sprite": preload("res://buildings/projectile_sprites/bryellow.png"),
-			"aoe": 0,
-			"piercing": 0,
-			"effects": []
-		},
-		"upgrades": []
-	},
-	"melee stun": {
-		"atkspd": 4,
-		"range": 45,
-		"sprite": preload("res://buildings/projectile_sprites/bryellow.png"),
-		"targets": 10,
-		"cost": 1,
-		"buyable": true,
-		"proj": {
-			"damage": 5,
-			"range": 5,
-			"speed": 500,
-			"sprite": preload("res://buildings/projectile_sprites/bryellow.png"),
-			"aoe": 0,
-			"piercing": 0,
-			"effects": [ slow(1, 1)]
-		},
-		"upgrades": []
-	},
-	"ice": {
-		"atkspd": 1,
-		"range": 50,
-		"sprite": preload("res://buildings/tower_sprites/tower_ice.png"),
-		"targets": 1,
-		"cost": 2,
-		"buyable": true,
-		"proj": {
-			"damage": 1,
-			"range": 50,
-			"speed": 500,
-			"sprite": preload("res://buildings/projectile_sprites/ice.png"),
-			"aoe": 30,
-			"piercing": 0,
-			"effects": [ slow(0.3, 1, true) ]
-		},
-		"upgrades": []
-	},
-	"poison": {
-		"atkspd": 1,
-		"range": 50,
-		"sprite": preload("res://buildings/tower_sprites/tower_poison.png"),
-		"targets": 1,
-		"cost": 2,
-		"buyable": true,
-		"proj": {
-			"damage": 1,
-			"range": 50,
-			"speed": 500,
-			"sprite": preload("res://buildings/projectile_sprites/purple.png")	,
-			"aoe": 30,
-			"piercing": 0,
-			"effects": [ poison(0.5, 40, 1), ]
-		},
-		"upgrades": []
-	},
-	"fire": {
-		"atkspd": 2,
-		"range": 200,
-		"sprite": preload("res://buildings/projectile_sprites/orange.png"),
-		"targets": 3,
-		"cost": 2,
-		"buyable": true,
-		"proj": {
-			"damage": 10,
-			"range": 50,
-			"speed": 500,
-			"sprite": preload("res://buildings/projectile_sprites/orange.png"),
-			"aoe": 0,
-			"piercing": 0,
-			"effects": [ burn(10, 10) ]
-		},
-		"upgrades": []
-	}, 
-	"cannon": {
-		"atkspd": 2,
-		"range": 200,
-		"sprite": preload("res://buildings/projectile_sprites/brown.png"),
-		"targets": 1,
-		"cost": 3,
-		"buyable": true,
-		"proj": {
-			"damage": 10,
-			"range": 50,
-			"speed": 500,
-			"sprite": preload("res://buildings/projectile_sprites/brown.png"),
-			"aoe": 100,
-			"piercing": 0,
-			"effects": []
-		},
-		"upgrades": []
+	"goblin": {
+		"display_name": "Goblin",
+		"description": "Goblin towers favor arrows, brawlers, and explosives.",
+		"towers": {
+			"arrow": {
+				"atkspd": 1,
+				"range": 200,
+				"sprite": preload("res://buildings/tower_sprites/tower_arrow.png"),
+				"targets": 1,
+				"cost": 1,
+				"buyable": true,
+				"proj": {
+					"damage": 5,
+					"range": 2,
+					"speed": 500,
+					"sprite": preload("res://buildings/projectile_sprites/pink.png"),
+					"aoe": 0,
+					"piercing": 0,
+					"effects": []
+				},
+				"upgrades": ["arrow 2"]
+			},
+			"arrow 2": {
+				"atkspd": 1,
+				"range": 200,
+				"sprite": preload("res://buildings/tower_sprites/tower_arrow.png"),
+				"targets": 2,
+				"cost": 1,
+				"buyable": false,
+				"proj": {
+					"damage": 10,
+					"range": 5,
+					"speed": 500,
+					"sprite": preload("res://buildings/projectile_sprites/proj.png"),
+					"aoe": 0,
+					"piercing": 0,
+					"effects": []
+				},
+				"upgrades": ["arrow 3"]
+			},
+			"arrow 3": {
+				"atkspd": 1,
+				"range": 200,
+				"sprite": preload("res://buildings/tower_sprites/tower_arrow.png"),
+				"targets": 4,
+				"cost": 1,
+				"buyable": false,
+				"proj": {
+					"damage": 15,
+					"range": 5,
+					"speed": 500,
+					"sprite": preload("res://buildings/projectile_sprites/proj.png"),
+					"aoe": 0,
+					"piercing": 0,
+					"effects": []
+				},
+				"upgrades": []
+			},
+			"melee": {
+				"atkspd": 0.2,
+				"range": 45,
+				"sprite": preload("res://buildings/projectile_sprites/bryellow.png"),
+				"targets": 10,
+				"cost": 1,
+				"buyable": true,
+				"proj": {
+					"damage": 5,
+					"range": 5,
+					"speed": 500,
+					"sprite": preload("res://buildings/projectile_sprites/bryellow.png"),
+					"aoe": 0,
+					"piercing": 0,
+					"effects": []
+				},
+				"upgrades": []
+			},
+			"melee stun": {
+				"atkspd": 4,
+				"range": 45,
+				"sprite": preload("res://buildings/projectile_sprites/bryellow.png"),
+				"targets": 10,
+				"cost": 1,
+				"buyable": true,
+				"proj": {
+					"damage": 5,
+					"range": 5,
+					"speed": 500,
+					"sprite": preload("res://buildings/projectile_sprites/bryellow.png"),
+					"aoe": 0,
+					"piercing": 0,
+					"effects": [slow(1, 1)]
+				},
+				"upgrades": []
+			},
+			"cannon": {
+				"atkspd": 2,
+				"range": 200,
+				"sprite": preload("res://buildings/projectile_sprites/brown.png"),
+				"targets": 1,
+				"cost": 3,
+				"buyable": true,
+				"proj": {
+					"damage": 10,
+					"range": 50,
+					"speed": 500,
+					"sprite": preload("res://buildings/projectile_sprites/brown.png"),
+					"aoe": 100,
+					"piercing": 0,
+					"effects": []
+				},
+				"upgrades": []
+			}
+		}
 	}
 }
 
 
 static func burn(dmg, dur, stacking = false, id = ""):
-	return { "handler": "burn", "name": "burn" + id, "stacking": stacking, "dmg": dmg, "dur": dur, "tick_rate": 1 }
+	return {"handler": "burn", "name": "burn" + id, "stacking": stacking, "dmg": dmg, "dur": dur, "tick_rate": 1}
+
+
 static func slow(val, dur, stacking = false, id = ""):
-	return { "handler": "slow", "name": "slow" + id, "stacking": stacking, "val": val, "dur": dur}
+	return {"handler": "slow", "name": "slow" + id, "stacking": stacking, "val": val, "dur": dur}
+
+
 static func poison(val, dmg, dur, stacking = false, id = ""):
-	return { "handler": "poison", "name": "poison" + id, "stacking": stacking, "val": val, "dmg": dmg, "dur": dur, "tick_rate": 1}
+	return {"handler": "poison", "name": "poison" + id, "stacking": stacking, "val": val, "dmg": dmg, "dur": dur, "tick_rate": 1}

@@ -11,4 +11,4 @@ signal on_live_change(l: int)
 signal tower_clicked(tower: Node2D)
 
 # UI
-signal on_tower_ui_clicked(tower_id: String)
+signal on_tower_ui_clicked(faction_id: String, tower_id: String)
