@@ -4,6 +4,8 @@
 
 extends Node2D
 
+const TowerRangeIndicator = preload("res://buildings/tower_range_indicator.gd")
+
 var lives = 100
 
 var _g: int
@@ -21,14 +23,25 @@ var gold: int:
 var tower = preload("res://buildings/tower.tscn")
 
 var selected_tower_id_for_placing = null
+var range_indicator
 
 func _ready():
 	Events.on_wave_done.connect(get_wave_bounty)
 	Events.tower_clicked.connect(on_tower_clicked)
 	Events.on_enemy_killed.connect(func(): gold += 1) # should be bounty per enemy?
 	Events.on_enemy_destination_reached.connect(func(): lives -= 1)
-	Events.on_tower_ui_clicked.connect(func(t_id): selected_tower_id_for_placing = t_id)
+	Events.on_tower_ui_clicked.connect(select_tower_for_placing)
+	range_indicator = TowerRangeIndicator.new()
+	range_indicator.visible = false
+	add_child(range_indicator)
 	gold = 20
+
+
+func select_tower_for_placing(tower_id):
+	selected_tower_id_for_placing = tower_id
+	var tower_data = Towers.get_tower(tower_id)
+	range_indicator.set_tower_range(tower_data.range)
+	range_indicator.visible = true
 
 
 func get_wave_bounty(wave):
@@ -41,6 +54,7 @@ func _unhandled_input(e):
 	
 	if e is InputEventMouseButton and e.button_index == 2 and e.pressed:
 		selected_tower_id_for_placing = null
+		range_indicator.visible = false
 		mousemap.set_cell(last_hovered_cell)
 		return
 
@@ -55,19 +69,27 @@ func _physics_process(_delta):
 	var data = tilemap.get_cell_tile_data(hovered_cell)
 	
 	if !data:
+		placable = false
+		range_indicator.visible = false
 		return
+
+	range_indicator.visible = true
+	range_indicator.position = tilemap.map_to_local(hovered_cell)
 	
-	if last_hovered_cell != hovered_cell:
+	var cell_changed = last_hovered_cell != hovered_cell
+	if cell_changed:
 		mousemap.set_cell(last_hovered_cell)
-	else:
-		return
 	
 	if ["Obstacle", "Waypoint"].any(func(x): return data.get_custom_data(x)):
-		mousemap.set_cell(hovered_cell, 1, Vector2i(0, 0))
 		placable = false
+		if cell_changed:
+			mousemap.set_cell(hovered_cell, 1, Vector2i(0, 0))
 	else:
 		placable = true
-		mousemap.set_cell(hovered_cell, 0, Vector2i(0, 0))
+		if cell_changed:
+			mousemap.set_cell(hovered_cell, 0, Vector2i(0, 0))
+
+	range_indicator.set_placement_valid(placable and gold >= Towers.get_tower(selected_tower_id_for_placing).cost)
 		
 	last_hovered_cell = hovered_cell
 
