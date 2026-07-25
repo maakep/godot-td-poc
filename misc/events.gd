@@ -6,6 +6,7 @@ signal on_enemy_killed()
 signal on_enemy_destination_reached()
 signal on_wave_done(wave)
 signal on_gold_change(g: int)
+signal on_live_change(l: int)
 
 signal tower_clicked(tower: Node2D)
 

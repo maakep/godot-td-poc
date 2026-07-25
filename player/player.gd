@@ -6,7 +6,13 @@ extends Node2D
 
 const TowerRangeIndicator = preload("res://buildings/tower_range_indicator.gd")
 
-var lives = 100
+var _lives = 100
+var lives: int:
+	get: 
+		return _lives
+	set(value):
+		_lives = value
+		Events.on_live_change.emit(_lives)
 
 var _g: int
 var gold: int:
@@ -15,7 +21,8 @@ var gold: int:
 	set(value):
 		_g = value
 		Events.on_gold_change.emit(_g)
-		
+
+
 
 @onready var tilemap = $"../Layers/TileMapLayer"
 @onready var mousemap = $"../Layers/MouseLayer"

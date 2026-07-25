@@ -56,7 +56,7 @@ func spawn():
 	creeps_to_kill = creeps_array.reduce(func(sum, item): return sum + item.amount, 0)
 	
 	for c in creeps_array:
-		await get_tree().create_timer(1).timeout
+		await get_tree().create_timer(0.7).timeout
 		
 		for i in range(c.amount):
 			var data = Enemies.all[c.unit]
