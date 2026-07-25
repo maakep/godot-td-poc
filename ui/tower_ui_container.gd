@@ -23,21 +23,22 @@ func load_towers(towers: Dictionary) -> void:
 		button.tower_data = tower
 		button.tower_id = tower_id
 		button.tower_hovered.connect(_show_tower_tooltip)
-		button.tower_unhovered.connect(_on_tower_unhovered)
 		add_child(button)
+
+
+func _process(_delta: float) -> void:
+	if hovered_tower_id.is_empty():
+		return
+
+	var mouse_inside_build_bar := Rect2(Vector2.ZERO, size).has_point(get_local_mouse_position())
+	if !mouse_inside_build_bar:
+		_hide_tower_tooltip()
 
 
 func _show_tower_tooltip(tower_id: String, tower_data: Dictionary) -> void:
 	hovered_tower_id = tower_id
 	tower_tooltip.setup(tower_id, tower_data)
 	tower_tooltip.show()
-
-
-func _on_tower_unhovered(tower_id: String) -> void:
-	if hovered_tower_id != tower_id:
-		return
-
-	_hide_tower_tooltip()
 
 
 func _hide_tower_tooltip() -> void:
