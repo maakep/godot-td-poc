@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://cnsxp8ebb578o" path="res://ui/tower_ui_button.gd" id="1_hvd25"]
 [ext_resource type="Texture2D" uid="uid://5iru83txnhny" path="res://buildings/tower_sprites/tower_arrow.png" id="2_eomhb"]
 [ext_resource type="Texture2D" uid="uid://cfypdwl0vogqk" path="res://green.png" id="3_a2g2u"]
-[ext_resource type="Script" path="res://ui/tower_texture_button.gd" id="4_texture_button"]
 
 [node name="TowerUiButton" type="Control" unique_id=2098094705]
 custom_minimum_size = Vector2(64, 64)
@@ -24,7 +23,6 @@ texture_normal = ExtResource("2_eomhb")
 texture_pressed = ExtResource("3_a2g2u")
 ignore_texture_size = true
 stretch_mode = 0
-script = ExtResource("4_texture_button")
 
 [node name="CostLabel" type="Label" parent="."]
 z_index = 1
@@ -48,4 +46,6 @@ text = "0 G"
 horizontal_alignment = 2
 vertical_alignment = 2
 
+[connection signal="mouse_entered" from="TextureButton" to="." method="_on_texture_button_mouse_entered"]
+[connection signal="mouse_exited" from="TextureButton" to="." method="_on_texture_button_mouse_exited"]
 [connection signal="pressed" from="TextureButton" to="." method="_on_pressed"]

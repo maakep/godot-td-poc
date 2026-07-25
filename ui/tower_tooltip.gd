@@ -1,4 +1,4 @@
-extends MarginContainer
+extends PanelContainer
 
 var tower_id := ""
 var tower_data: Dictionary = {}
