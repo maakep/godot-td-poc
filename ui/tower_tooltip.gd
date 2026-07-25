@@ -6,6 +6,11 @@ enum StatImportance {
 	TERTIARY,
 }
 
+const SLOW_COLOR := Color(0.35, 0.78, 1.0)
+const STUN_COLOR := Color(1.0, 0.86, 0.3)
+const POISON_COLOR := Color(0.72, 0.45, 1.0)
+const BURN_COLOR := Color(1.0, 0.45, 0.2)
+
 var tower_id := ""
 var tower_data: Dictionary = {}
 
@@ -53,12 +58,19 @@ func _populate() -> void:
 	_add_stat(core_stats_grid, "Attack rate", "%s / sec" % _format_number(attacks_per_second), StatImportance.PRIMARY)
 	_add_stat(core_stats_grid, "Range", str(tower_data.get("range", 0)), StatImportance.PRIMARY)
 
-	_add_stat(combat_stats_grid, "Cost", "%s gold" % tower_data.get("cost", 0), StatImportance.SECONDARY)
 	_add_stat(combat_stats_grid, "Targets", str(tower_data.get("targets", 1)), StatImportance.SECONDARY)
 
 	var effects: Array = projectile.get("effects", [])
-	if !effects.is_empty():
-		_add_stat(combat_stats_grid, "Effects", _format_effects(effects), StatImportance.SECONDARY)
+	for index in range(effects.size()):
+		var effect: Dictionary = effects[index]
+		var effect_label := "Effect" if index == 0 else ""
+		_add_stat(
+			combat_stats_grid,
+			effect_label,
+			_format_effect(effect),
+			StatImportance.SECONDARY,
+			_effect_color(effect)
+		)
 
 	var area_radius = projectile.get("aoe", 0)
 	if area_radius > 0:
@@ -85,7 +97,13 @@ func _clear_grid(grid: GridContainer) -> void:
 		child.queue_free()
 
 
-func _add_stat(grid: GridContainer, label_text: String, value_text: String, importance: int) -> void:
+func _add_stat(
+	grid: GridContainer,
+	label_text: String,
+	value_text: String,
+	importance: int,
+	value_color: Color = Color.TRANSPARENT
+) -> void:
 	var stat_label = Label.new()
 	stat_label.text = label_text
 	stat_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -102,16 +120,21 @@ func _add_stat(grid: GridContainer, label_text: String, value_text: String, impo
 	match importance:
 		StatImportance.PRIMARY:
 			stat_label.modulate = Color(0.88, 0.9, 0.95)
-			stat_label.add_theme_font_size_override("font_size", 14)
+			stat_label.add_theme_font_size_override("font_size", 13)
 			stat_value.add_theme_color_override("font_color", Color(1, 0.84, 0.3))
-			stat_value.add_theme_font_size_override("font_size", 17)
+			stat_value.add_theme_font_size_override("font_size", 16)
 		StatImportance.SECONDARY:
 			stat_label.modulate = Color(0.72, 0.76, 0.82)
+			stat_label.add_theme_font_size_override("font_size", 12)
+			stat_value.add_theme_font_size_override("font_size", 13)
 		StatImportance.TERTIARY:
 			stat_label.modulate = Color(0.55, 0.59, 0.66)
 			stat_value.modulate = Color(0.65, 0.69, 0.75)
-			stat_label.add_theme_font_size_override("font_size", 12)
-			stat_value.add_theme_font_size_override("font_size", 12)
+			stat_label.add_theme_font_size_override("font_size", 11)
+			stat_value.add_theme_font_size_override("font_size", 11)
+
+	if value_color.a > 0.0:
+		stat_value.add_theme_color_override("font_color", value_color)
 
 
 func _format_number(value: float) -> String:
@@ -119,18 +142,6 @@ func _format_number(value: float) -> String:
 		return str(int(round(value)))
 
 	return str(snappedf(value, 0.01))
-
-
-func _format_effects(effects: Array) -> String:
-	var effect_descriptions = PackedStringArray()
-
-	for effect in effects:
-		var effect_data: Dictionary = effect
-		var description := _format_effect(effect_data)
-		if description not in effect_descriptions:
-			effect_descriptions.append(description)
-
-	return "; ".join(effect_descriptions)
 
 
 func _format_effect(effect: Dictionary) -> String:
@@ -142,19 +153,35 @@ func _format_effect(effect: Dictionary) -> String:
 			var slow_percent: float = effect.get("val", 0) * 100.0
 			if slow_percent >= 99.5:
 				return "Stun · %ss" % duration
-			return "%s%% slow · %ss" % [_format_number(slow_percent), duration]
+			return "Slow %s%% · %ss" % [_format_number(slow_percent), duration]
 		"poison":
 			var poison_dps := _effect_dps(effect)
 			var poison_slow: float = effect.get("val", 0) * 100.0
-			return "Poison · %s DPS + %s%% slow · %ss" % [
+			return "Poison %s DPS · %s%% slow · %ss" % [
 				_format_number(poison_dps),
 				_format_number(poison_slow),
 				duration,
 			]
 		"burn":
-			return "Burn · %s DPS · %ss" % [_format_number(_effect_dps(effect)), duration]
+			return "Burn %s DPS · %ss" % [_format_number(_effect_dps(effect)), duration]
 		_:
 			return handler.capitalize()
+
+
+func _effect_color(effect: Dictionary) -> Color:
+	var handler: String = effect.get("handler", effect.get("name", ""))
+	if handler == "slow" and float(effect.get("val", 0)) >= 0.995:
+		return STUN_COLOR
+
+	match handler:
+		"slow":
+			return SLOW_COLOR
+		"poison":
+			return POISON_COLOR
+		"burn":
+			return BURN_COLOR
+		_:
+			return Color.WHITE
 
 
 func _effect_dps(effect: Dictionary) -> float:
