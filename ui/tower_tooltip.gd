@@ -1,12 +1,5 @@
 extends PanelContainer
 
-enum StatImportance {
-	PRIMARY,
-	SECONDARY,
-	TERTIARY,
-}
-
-const CORE_COLOR := Color(1.0, 0.76, 0.26)
 const SLOW_COLOR := Color(0.35, 0.78, 1.0)
 const STUN_COLOR := Color(1.0, 0.92, 0.45)
 const POISON_COLOR := Color(0.72, 0.45, 1.0)
@@ -18,7 +11,7 @@ var tower_data: Dictionary = {}
 @onready var name_label = $VBoxContainer/Name
 @onready var description_label = $VBoxContainer/Description
 @onready var core_stats_grid = $VBoxContainer/CoreStats
-@onready var combat_stats_grid = $VBoxContainer/CombatStats
+@onready var traits_stats_grid = $VBoxContainer/TraitsStats
 @onready var projectile_stats_grid = $VBoxContainer/ProjectileStats
 
 
@@ -45,7 +38,7 @@ func _populate() -> void:
 	description_label.visible = !description.is_empty()
 
 	_clear_grid(core_stats_grid)
-	_clear_grid(combat_stats_grid)
+	_clear_grid(traits_stats_grid)
 	_clear_grid(projectile_stats_grid)
 
 	var projectile: Dictionary = tower_data.get("proj", {})
@@ -54,22 +47,21 @@ func _populate() -> void:
 	var attacks_per_second := 1.0 / attack_interval if attack_interval > 0.0 else 0.0
 	var base_dps := damage * attacks_per_second
 
-	_add_stat(core_stats_grid, "Damage", _format_number(damage), StatImportance.PRIMARY)
-	_add_stat(core_stats_grid, "Direct DPS", _format_number(base_dps), StatImportance.PRIMARY)
-	_add_stat(core_stats_grid, "Attack rate", "%s / sec" % _format_number(attacks_per_second), StatImportance.PRIMARY)
-	_add_stat(core_stats_grid, "Range", str(tower_data.get("range", 0)), StatImportance.PRIMARY)
+	_add_stat(core_stats_grid, "Damage", _format_number(damage))
+	_add_stat(core_stats_grid, "Direct DPS", _format_number(base_dps))
+	_add_stat(core_stats_grid, "Attack rate", "%s / sec" % _format_number(attacks_per_second))
+	_add_stat(core_stats_grid, "Range", str(tower_data.get("range", 0)))
 
-	_add_stat(combat_stats_grid, "Targets", str(tower_data.get("targets", 1)), StatImportance.SECONDARY)
+	_add_stat(traits_stats_grid, "Targets", str(tower_data.get("targets", 1)))
 
 	var effects: Array = projectile.get("effects", [])
 	for index in range(effects.size()):
 		var effect: Dictionary = effects[index]
 		var effect_label := "Effect" if index == 0 else ""
 		_add_stat(
-			combat_stats_grid,
+			traits_stats_grid,
 			effect_label,
 			_format_effect(effect),
-			StatImportance.SECONDARY,
 			_effect_color(effect)
 		)
 
@@ -78,18 +70,18 @@ func _populate() -> void:
 		var upgrade_names = PackedStringArray()
 		for upgrade_id in upgrades:
 			upgrade_names.append(str(upgrade_id).capitalize())
-		_add_stat(combat_stats_grid, "Upgrades to", ", ".join(upgrade_names), StatImportance.SECONDARY)
+		_add_stat(traits_stats_grid, "Upgrades to", ", ".join(upgrade_names))
 
 	var area_radius = projectile.get("aoe", 0)
 	if area_radius > 0:
-		_add_stat(projectile_stats_grid, "Area radius", str(area_radius), StatImportance.SECONDARY)
+		_add_stat(projectile_stats_grid, "Area radius", str(area_radius))
 
 	var piercing = projectile.get("piercing", 0)
 	if piercing > 0:
-		_add_stat(projectile_stats_grid, "Piercing", str(piercing), StatImportance.SECONDARY)
+		_add_stat(projectile_stats_grid, "Piercing", str(piercing))
 
-	_add_stat(projectile_stats_grid, "Speed", str(projectile.get("speed", 0)), StatImportance.TERTIARY)
-	_add_stat(projectile_stats_grid, "Lifetime", "%s s" % projectile.get("range", 0), StatImportance.TERTIARY)
+	_add_stat(projectile_stats_grid, "Speed", str(projectile.get("speed", 0)))
+	_add_stat(projectile_stats_grid, "Lifetime", "%s s" % projectile.get("range", 0))
 
 
 func _clear_grid(grid: GridContainer) -> void:
@@ -102,40 +94,24 @@ func _add_stat(
 	grid: GridContainer,
 	label_text: String,
 	value_text: String,
-	importance: int,
 	value_color: Color = Color.TRANSPARENT
 ) -> void:
 	var stat_label = Label.new()
 	stat_label.text = label_text
 	stat_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	stat_label.theme_type_variation = &"TooltipMeta"
 	grid.add_child(stat_label)
 
 	var stat_value = Label.new()
 	stat_value.text = value_text
+	stat_value.theme_type_variation = &"TooltipBody"
 	stat_value.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	stat_value.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	stat_value.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	stat_value.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	grid.add_child(stat_value)
-
-	match importance:
-		StatImportance.PRIMARY:
-			stat_label.modulate = Color(0.88, 0.9, 0.95)
-			stat_label.add_theme_font_size_override("font_size", 13)
-			stat_value.add_theme_color_override("font_color", CORE_COLOR)
-			stat_value.add_theme_font_size_override("font_size", 16)
-		StatImportance.SECONDARY:
-			stat_label.modulate = Color(0.72, 0.76, 0.82)
-			stat_label.add_theme_font_size_override("font_size", 12)
-			stat_value.add_theme_font_size_override("font_size", 13)
-		StatImportance.TERTIARY:
-			stat_label.modulate = Color(0.55, 0.59, 0.66)
-			stat_value.modulate = Color(0.65, 0.69, 0.75)
-			stat_label.add_theme_font_size_override("font_size", 11)
-			stat_value.add_theme_font_size_override("font_size", 11)
-
 	if value_color.a > 0.0:
 		stat_value.add_theme_color_override("font_color", value_color)
+	grid.add_child(stat_value)
 
 
 func _format_number(value: float) -> String:

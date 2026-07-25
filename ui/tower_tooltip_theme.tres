@@ -1,0 +1,15 @@
+[gd_resource type="Theme" format=3]
+
+[resource]
+TooltipBody/base_type = &"Label"
+TooltipBody/colors/font_color = Color(0.94, 0.96, 1, 1)
+TooltipBody/font_sizes/font_size = 13
+TooltipBodyMuted/base_type = &"Label"
+TooltipBodyMuted/colors/font_color = Color(0.68, 0.72, 0.8, 1)
+TooltipBodyMuted/font_sizes/font_size = 13
+TooltipMeta/base_type = &"Label"
+TooltipMeta/colors/font_color = Color(0.68, 0.72, 0.8, 1)
+TooltipMeta/font_sizes/font_size = 12
+TooltipTitle/base_type = &"Label"
+TooltipTitle/colors/font_color = Color(0.94, 0.96, 1, 1)
+TooltipTitle/font_sizes/font_size = 18
