@@ -6,8 +6,9 @@ enum StatImportance {
 	TERTIARY,
 }
 
+const CORE_COLOR := Color(1.0, 0.76, 0.26)
 const SLOW_COLOR := Color(0.35, 0.78, 1.0)
-const STUN_COLOR := Color(1.0, 0.86, 0.3)
+const STUN_COLOR := Color(1.0, 0.92, 0.45)
 const POISON_COLOR := Color(0.72, 0.45, 1.0)
 const BURN_COLOR := Color(1.0, 0.45, 0.2)
 
@@ -72,20 +73,20 @@ func _populate() -> void:
 			_effect_color(effect)
 		)
 
-	var area_radius = projectile.get("aoe", 0)
-	if area_radius > 0:
-		_add_stat(combat_stats_grid, "Area radius", str(area_radius), StatImportance.SECONDARY)
-
-	var piercing = projectile.get("piercing", 0)
-	if piercing > 0:
-		_add_stat(combat_stats_grid, "Piercing", str(piercing), StatImportance.SECONDARY)
-
 	var upgrades: Array = tower_data.get("upgrades", [])
 	if !upgrades.is_empty():
 		var upgrade_names = PackedStringArray()
 		for upgrade_id in upgrades:
 			upgrade_names.append(str(upgrade_id).capitalize())
 		_add_stat(combat_stats_grid, "Upgrades to", ", ".join(upgrade_names), StatImportance.SECONDARY)
+
+	var area_radius = projectile.get("aoe", 0)
+	if area_radius > 0:
+		_add_stat(projectile_stats_grid, "Area radius", str(area_radius), StatImportance.SECONDARY)
+
+	var piercing = projectile.get("piercing", 0)
+	if piercing > 0:
+		_add_stat(projectile_stats_grid, "Piercing", str(piercing), StatImportance.SECONDARY)
 
 	_add_stat(projectile_stats_grid, "Speed", str(projectile.get("speed", 0)), StatImportance.TERTIARY)
 	_add_stat(projectile_stats_grid, "Lifetime", "%s s" % projectile.get("range", 0), StatImportance.TERTIARY)
@@ -121,7 +122,7 @@ func _add_stat(
 		StatImportance.PRIMARY:
 			stat_label.modulate = Color(0.88, 0.9, 0.95)
 			stat_label.add_theme_font_size_override("font_size", 13)
-			stat_value.add_theme_color_override("font_color", Color(1, 0.84, 0.3))
+			stat_value.add_theme_color_override("font_color", CORE_COLOR)
 			stat_value.add_theme_font_size_override("font_size", 16)
 		StatImportance.SECONDARY:
 			stat_label.modulate = Color(0.72, 0.76, 0.82)
