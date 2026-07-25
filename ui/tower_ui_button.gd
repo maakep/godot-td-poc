@@ -1,13 +1,11 @@
 extends Control
 
-var faction
-var faction_id
-var tower
-var tower_id
+var tower_data: Dictionary = {}
+var tower_id: String = ""
 
-func _ready():
-	$TextureButton.texture_normal = tower.sprite
-	$TextureButton.tooltip_text = "%s: %s" % [faction.display_name, tower_id.capitalize()]
+func _ready() -> void:
+	$TextureButton.configure(tower_id, tower_data)
+	$CostLabel.text = "%s G" % tower_data.cost
 
-func _on_pressed():
-	Events.on_tower_ui_clicked.emit(faction_id, tower_id)
+func _on_pressed() -> void:
+	Events.on_tower_ui_clicked.emit(tower_id)

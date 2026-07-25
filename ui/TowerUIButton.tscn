@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cnsxp8ebb578o" path="res://ui/tower_ui_button.gd" id="1_hvd25"]
 [ext_resource type="Texture2D" uid="uid://5iru83txnhny" path="res://buildings/tower_sprites/tower_arrow.png" id="2_eomhb"]
 [ext_resource type="Texture2D" uid="uid://cfypdwl0vogqk" path="res://green.png" id="3_a2g2u"]
+[ext_resource type="Script" path="res://ui/tower_texture_button.gd" id="4_texture_button"]
 
 [node name="TowerUiButton" type="Control" unique_id=2098094705]
 custom_minimum_size = Vector2(64, 64)
@@ -23,5 +24,28 @@ texture_normal = ExtResource("2_eomhb")
 texture_pressed = ExtResource("3_a2g2u")
 ignore_texture_size = true
 stretch_mode = 0
+script = ExtResource("4_texture_button")
+
+[node name="CostLabel" type="Label" parent="."]
+z_index = 1
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = -26.0
+offset_right = -3.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.84, 0.2, 1)
+theme_override_colors/font_outline_color = Color(0.04, 0.04, 0.04, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 15
+text = "0 G"
+horizontal_alignment = 2
+vertical_alignment = 2
 
 [connection signal="pressed" from="TextureButton" to="." method="_on_pressed"]

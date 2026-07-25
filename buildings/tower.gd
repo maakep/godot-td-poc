@@ -1,5 +1,7 @@
 extends Node2D
 
+const ProjectileScene = preload("res://buildings/projectile.tscn")
+
 var attack_targets: int = 1
 
 var enemies_in_range: Array = []
@@ -10,31 +12,36 @@ var enemies_in_range: Array = []
 var cell
 var tilemap
 
-var faction_id # set by creator
-var tower_id # set by creator
-var tower # set by load_tower
+var tower_id: String = "" # set by load_tower
+var tower_data: Dictionary = {} # set by load_tower
 
-var proj = preload("res://buildings/projectile.tscn")
-
-func _ready():
-	load_tower(faction_id, tower_id)
+func _ready() -> void:
+	_apply_tower_data()
 	
 	area.connect("area_entered", Callable(self, "_on_area_entered"))
 	area.connect("area_exited", Callable(self,"_on_area_exited"))
 
-func load_tower(new_faction_id, new_tower_id):
-	var twr = Towers.get_tower(new_faction_id, new_tower_id)
-	if !twr:
-		push_error("Unknown tower: %s/%s" % [new_faction_id, new_tower_id])
+func load_tower(new_tower_id: String, new_tower_data: Dictionary) -> void:
+	if new_tower_data.is_empty():
+		push_error("Cannot load tower without tower data: %s" % new_tower_id)
 		return
 
-	faction_id = new_faction_id
 	tower_id = new_tower_id
-	col.shape.radius = twr.range
-	attack_timer.wait_time = twr.atkspd
-	attack_targets = twr.targets
-	$Sprite2D.texture = twr.sprite
-	tower = twr
+	tower_data = new_tower_data
+
+	if is_node_ready():
+		_apply_tower_data()
+
+
+func _apply_tower_data() -> void:
+	if tower_data.is_empty():
+		push_error("Tower was added to the scene without tower data")
+		return
+
+	col.shape.radius = tower_data.range
+	attack_timer.wait_time = tower_data.atkspd
+	attack_targets = tower_data.targets
+	$Sprite2D.texture = tower_data.sprite
 
 
 var attacking = false
@@ -49,9 +56,9 @@ func attack():
 		return
 	
 	for i in range(enemies.size()):
-		var p = proj.instantiate()
+		var p = ProjectileScene.instantiate()
 		p.direction = global_position.direction_to(enemies[i].global_position)
-		p.load_projectile(tower.proj)
+		p.load_projectile(tower_data.proj)
 		call_deferred("add_child", p)
 	
 	attack_timer.start()
