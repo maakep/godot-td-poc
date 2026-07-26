@@ -4,7 +4,12 @@
 
 extends Node2D
 
+const TowerScene = preload("res://buildings/tower.tscn")
 const TowerRangeIndicator = preload("res://buildings/tower_range_indicator.gd")
+
+## Selected before the match and treated as immutable while the game is running.
+@export_category("Match Setup")
+@export var faction_id: String = "elemental"
 
 var _lives = 100
 var lives: int:
@@ -26,10 +31,10 @@ var gold: int:
 
 @onready var tilemap = $"../Layers/TileMapLayer"
 @onready var mousemap = $"../Layers/MouseLayer"
+@onready var tower_ui = %TowerUI
 
-var tower = preload("res://buildings/tower.tscn")
-
-var selected_tower_id_for_placing = null
+var faction_towers: Dictionary = {}
+var selected_tower_id_for_placing: String = ""
 var range_indicator
 
 func _ready():
@@ -41,12 +46,24 @@ func _ready():
 	range_indicator = TowerRangeIndicator.new()
 	range_indicator.visible = false
 	add_child(range_indicator)
+
+	var faction_data = Towers.get_faction(faction_id)
+	if faction_data.is_empty():
+		push_error("Unknown player faction: %s" % faction_id)
+	else:
+		faction_towers = Towers.get_towers(faction_id)
+		tower_ui.load_towers(faction_towers)
+
 	gold = 20
 
 
-func select_tower_for_placing(tower_id):
+func select_tower_for_placing(tower_id: String) -> void:
+	var tower_data := get_tower_data(tower_id)
+	if tower_data.is_empty():
+		push_error("Faction %s does not have tower: %s" % [faction_id, tower_id])
+		return
+
 	selected_tower_id_for_placing = tower_id
-	var tower_data = Towers.get_tower(tower_id)
 	range_indicator.set_tower_range(tower_data.range)
 	range_indicator.visible = true
 
@@ -56,11 +73,11 @@ func get_wave_bounty(wave):
 
 func _unhandled_input(e):
 	if selected_tower_id_for_placing and placable and e is InputEventMouseButton and e.button_index == 1 and e.pressed:
-		place_obstacle(selected_tower_id_for_placing)
+		place_tower(selected_tower_id_for_placing)
 		return
 	
 	if e is InputEventMouseButton and e.button_index == 2 and e.pressed:
-		selected_tower_id_for_placing = null
+		selected_tower_id_for_placing = ""
 		range_indicator.visible = false
 		mousemap.set_cell(last_hovered_cell)
 		return
@@ -96,12 +113,17 @@ func _physics_process(_delta):
 		if cell_changed:
 			mousemap.set_cell(hovered_cell, 0, Vector2i(0, 0))
 
-	range_indicator.set_placement_valid(placable and gold >= Towers.get_tower(selected_tower_id_for_placing).cost)
+	range_indicator.set_placement_valid(
+		placable and gold >= get_tower_data(selected_tower_id_for_placing).cost
+	)
 		
 	last_hovered_cell = hovered_cell
 
-func place_obstacle(tower_type):
-	var buying_tower = Towers.get_tower(tower_type)
+func place_tower(tower_id: String) -> void:
+	var buying_tower = get_tower_data(tower_id)
+	if buying_tower.is_empty():
+		push_error("Faction %s does not have tower: %s" % [faction_id, tower_id])
+		return
 	
 	if gold < buying_tower.cost:
 		return
@@ -114,11 +136,11 @@ func place_obstacle(tower_type):
 		return
 		
 	# tilemap.set_cell(clicked_cell, 1, Vector2i(0, 0)) # sets the tile background
-	var t = tower.instantiate()
+	var t = TowerScene.instantiate()
 	t.position = tilemap.map_to_local(clicked_cell)
 	t.cell = clicked_cell
 	t.tilemap = tilemap
-	t.tower_id = tower_type
+	t.load_tower(tower_id, buying_tower)
 	add_child(t)
 	gold = gold - buying_tower.cost
 	Events.tower_built.emit(t, clicked_cell)
@@ -127,10 +149,21 @@ func validate_path(cell):
 	return Pathfinder.instance.validate_full_path(cell)
 	
 func on_tower_clicked(t_obj):
-	var tower_data = t_obj.tower
-	var upgrade = tower_data.upgrades[0] if !tower_data.upgrades.is_empty() else null
-	if upgrade:
-		var upg_data = Towers.get_tower(upgrade)
+	var tower_data = t_obj.tower_data
+	var upgrade: String = tower_data.upgrades[0] if !tower_data.upgrades.is_empty() else ""
+	if !upgrade.is_empty():
+		var upg_data = get_tower_data(upgrade)
+		if upg_data.is_empty():
+			push_error("Faction %s does not have tower upgrade: %s" % [faction_id, upgrade])
+			return
+
 		if gold >= upg_data.cost:
 			gold = gold - upg_data.cost
-			t_obj.load_tower(upgrade) # BUG: Sometimes towers shoot every other colour?
+			t_obj.load_tower(upgrade, upg_data) # BUG: Sometimes towers shoot every other colour?
+
+
+func get_tower_data(tower_id: String) -> Dictionary:
+	if faction_towers.is_empty():
+		return {}
+
+	return faction_towers.get(tower_id, {})

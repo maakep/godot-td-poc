@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://w62ym3parlfc" path="res://player/player.gd" id="7_64int"]
 [ext_resource type="Script" uid="uid://bwptv50vdh3dl" path="res://gold_ui.gd" id="9_62qko"]
 [ext_resource type="Script" uid="uid://dvbo4kq66vspy" path="res://ui/tower_ui_container.gd" id="10_hve3p"]
+[ext_resource type="PackedScene" path="res://ui/TowerTooltip.tscn" id="11_tooltip"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0kglt"]
 texture = ExtResource("1_3uhtl")
@@ -130,6 +131,20 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="HFlowContainer" type="HFlowContainer" parent="CanvasLayer/TowerUIPanel/MarginContainer" unique_id=553861895]
+[node name="TowerUI" type="HFlowContainer" parent="CanvasLayer/TowerUIPanel/MarginContainer" unique_id=553861895]
+unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("10_hve3p")
+
+[node name="TowerTooltip" parent="CanvasLayer" instance=ExtResource("11_tooltip")]
+unique_name_in_owner = true
+z_index = 10
+visible = false
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -95.0
+offset_right = 310.0
+offset_bottom = -95.0
+grow_vertical = 0

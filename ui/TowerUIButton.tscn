@@ -4,6 +4,22 @@
 [ext_resource type="Texture2D" uid="uid://5iru83txnhny" path="res://buildings/tower_sprites/tower_arrow.png" id="2_eomhb"]
 [ext_resource type="Texture2D" uid="uid://cfypdwl0vogqk" path="res://green.png" id="3_a2g2u"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cost_badge"]
+content_margin_left = 1.0
+content_margin_top = 1.0
+content_margin_right = 1.0
+content_margin_bottom = 1.0
+bg_color = Color(1, 0.78, 0.08, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.08, 0.07, 0.03, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [node name="TowerUiButton" type="Control" unique_id=2098094705]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 3
@@ -24,4 +40,32 @@ texture_pressed = ExtResource("3_a2g2u")
 ignore_texture_size = true
 stretch_mode = 0
 
+[node name="CostBadge" type="PanelContainer" parent="."]
+z_index = 1
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -23.0
+offset_top = -23.0
+offset_right = -3.0
+offset_bottom = -3.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_cost_badge")
+
+[node name="Cost" type="Label" parent="CostBadge"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.04, 0.035, 0.02, 1)
+theme_override_font_sizes/font_size = 12
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="mouse_entered" from="TextureButton" to="." method="_on_texture_button_mouse_entered"]
 [connection signal="pressed" from="TextureButton" to="." method="_on_pressed"]
