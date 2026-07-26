@@ -58,8 +58,12 @@ func _ready():
 
 
 func select_tower_for_placing(tower_id: String) -> void:
+	var tower_data := get_tower_data(tower_id)
+	if tower_data.is_empty():
+		push_error("Faction %s does not have tower: %s" % [faction_id, tower_id])
+		return
+
 	selected_tower_id_for_placing = tower_id
-	var tower_data = Towers.get_tower(faction_id, tower_id)
 	range_indicator.set_tower_range(tower_data.range)
 	range_indicator.visible = true
 

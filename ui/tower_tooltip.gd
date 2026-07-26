@@ -7,6 +7,7 @@ const BURN_COLOR := Color(1.0, 0.45, 0.2)
 
 var tower_id := ""
 var tower_data: Dictionary = {}
+var _is_populated := false
 
 @onready var name_label = $VBoxContainer/Name
 @onready var description_label = $VBoxContainer/Description
@@ -16,10 +17,16 @@ var tower_data: Dictionary = {}
 
 
 func setup(new_tower_id: String, new_tower_data: Dictionary) -> void:
+	var content_unchanged := (
+		_is_populated
+		and tower_id == new_tower_id
+		and tower_data == new_tower_data
+	)
+
 	tower_id = new_tower_id
 	tower_data = new_tower_data
 
-	if is_node_ready():
+	if is_node_ready() and !content_unchanged:
 		_populate()
 
 
@@ -29,6 +36,7 @@ func _ready() -> void:
 
 func _populate() -> void:
 	if tower_data.is_empty():
+		_is_populated = false
 		return
 
 	name_label.text = tower_data.get("display_name", tower_id.capitalize())
@@ -82,12 +90,12 @@ func _populate() -> void:
 
 	_add_stat(projectile_stats_grid, "Speed", str(projectile.get("speed", 0)))
 	_add_stat(projectile_stats_grid, "Lifetime", "%s s" % projectile.get("range", 0))
+	_is_populated = true
 
 
 func _clear_grid(grid: GridContainer) -> void:
 	for child in grid.get_children():
-		grid.remove_child(child)
-		child.queue_free()
+		child.free()
 
 
 func _add_stat(
