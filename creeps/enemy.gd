@@ -25,6 +25,7 @@ func _ready():
 	path = Pathfinder.instance.calc_path(null, null, flying)
 	next_target = path.pop_front()
 	Events.tower_built.connect(on_tower_built)
+	Events.on_obstacle_removed.connect(on_tower_removed)
 
 var waypoints_reached = 0
 func _physics_process(delta):
@@ -67,17 +68,25 @@ func on_tower_built(_obj, _cell):
 	if !flying:
 		Pathfinder.instance.request_recalc(self)
 
-func take_damage(dmg: int):
+func on_tower_removed(_obj, _cell):
+	if !flying:
+		Pathfinder.instance.request_recalc(self)
+
+func take_damage(dmg: float, source_tower: Node2D = null):
 	if is_queued_for_deletion():
 		return
 		
-	hp -= dmg
+	var actual_damage = minf(dmg, hp)
+	hp -= actual_damage
+	var killed = hp <= 0
+	if is_instance_valid(source_tower):
+		source_tower.record_damage(actual_damage, killed)
 	hp_bar.value = (hp / data.hp) * 100
 	
 	anim.stop()
 	anim.play("hit")
 	
-	if hp <= 0:
+	if killed:
 		Events.on_enemy_killed.emit()
 		
 		for effect in active_effects:
@@ -150,7 +159,7 @@ func _handle_poison(effect):
 	var eff_id = add_active_effect(
 		effect,
 		func():
-			take_damage(effect.dmg),
+			take_damage(effect.dmg, effect.get("source_tower", null)),
 		func(id):
 			ms_modifiers.erase(id)
 			recalculate_ms_modifier()
@@ -164,8 +173,8 @@ func _handle_poison(effect):
 func _handle_burn(effect):
 	var _eff_id = add_active_effect(
 			effect,
-			func():
-				take_damage(effect.dmg),
+		func():
+			take_damage(effect.dmg, effect.get("source_tower", null)),
 			func(_id):
 				pass,
 		)

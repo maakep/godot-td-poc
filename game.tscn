@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://w62ym3parlfc" path="res://player/player.gd" id="7_64int"]
 [ext_resource type="Script" uid="uid://bwptv50vdh3dl" path="res://gold_ui.gd" id="9_62qko"]
 [ext_resource type="Script" uid="uid://dvbo4kq66vspy" path="res://ui/tower_ui_container.gd" id="10_hve3p"]
+[ext_resource type="Script" uid="uid://bdks3jvb17pts" path="res://ui/tower_inspector.gd" id="11_tower_inspector"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0kglt"]
 texture = ExtResource("1_3uhtl")
@@ -133,3 +134,15 @@ theme_override_constants/margin_bottom = 5
 [node name="HFlowContainer" type="HFlowContainer" parent="CanvasLayer/TowerUIPanel/MarginContainer" unique_id=553861895]
 layout_mode = 2
 script = ExtResource("10_hve3p")
+
+[node name="TowerInspector" type="PanelContainer" parent="CanvasLayer" unique_id=1245889110]
+visible = false
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -370.0
+offset_top = 65.0
+offset_right = -16.0
+offset_bottom = 345.0
+grow_horizontal = 0
+script = ExtResource("11_tower_inspector")

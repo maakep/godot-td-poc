@@ -10,7 +10,7 @@ func _ready():
 		if !t.buyable:
 			continue
 			
-		var b: Control = button.instantiate()
-		b.tower = t
-		b.tower_id = tower_id
+		var b = button.instantiate()
+		b.setup(t, tower_id, t.cost)
+		b.activated.connect(func(id): Events.on_tower_ui_clicked.emit(id))
 		add_child(b)

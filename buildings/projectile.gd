@@ -6,11 +6,13 @@ var aoe: int = -1
 var speed = 500
 var projectile_range = 4
 var effects = []
+var source_tower: Node2D
 
 var direction # set by creator
 @onready var shapecast: ShapeCast2D = $AOE
 
-func load_projectile(proj):
+func load_projectile(proj, source: Node2D = null):
+	source_tower = source
 	speed = proj.speed
 	projectile_range = proj.range
 	damage = proj.damage
@@ -48,10 +50,10 @@ func _on_area_entered(enemy):
 			var aoe_enemy = shapecast.get_collider(i)
 			
 			if aoe_enemy != null and aoe_enemy != enemy:
-				aoe_enemy.take_damage(damage)
+				aoe_enemy.take_damage(damage, source_tower)
 				apply_effects(aoe_enemy)
 	
-	enemy.take_damage(damage)
+	enemy.take_damage(damage, source_tower)
 		
 	
 	if piercing == 0:
@@ -67,7 +69,9 @@ func apply_effects(enemy):
 		if res:
 			continue # resisted the effect
 		
-		enemy.apply_effect(effect)
+		var effect_with_source = effect.duplicate()
+		effect_with_source.source_tower = source_tower
+		enemy.apply_effect(effect_with_source)
 		
 		
 		

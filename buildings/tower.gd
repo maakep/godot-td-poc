@@ -12,6 +12,8 @@ var tilemap
 
 var tower_id # set by creator
 var tower # set by load_tower
+var damage_dealt: float = 0.0
+var kills: int = 0
 
 var proj = preload("res://buildings/projectile.tscn")
 
@@ -23,6 +25,7 @@ func _ready():
 
 func load_tower(id):
 	var twr = Towers.get_tower(id)
+	tower_id = id
 	col.shape.radius = twr.range
 	attack_timer.wait_time = twr.atkspd
 	attack_targets = twr.targets
@@ -44,7 +47,7 @@ func attack():
 	for i in range(enemies.size()):
 		var p = proj.instantiate()
 		p.direction = global_position.direction_to(enemies[i].global_position)
-		p.load_projectile(tower.proj)
+		p.load_projectile(tower.proj, self)
 		call_deferred("add_child", p)
 	
 	attack_timer.start()
@@ -73,7 +76,13 @@ func take_damage(dmg):
 	#queue_free()
 	pass
 
+func record_damage(amount: float, killed: bool) -> void:
+	damage_dealt += amount
+	if killed:
+		kills += 1
+
 func _on_tower_area_2d_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed and event.double_click:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			viewport.set_input_as_handled()
 			Events.tower_clicked.emit(self)
