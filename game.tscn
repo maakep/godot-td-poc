@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://bwptv50vdh3dl" path="res://gold_ui.gd" id="9_62qko"]
 [ext_resource type="Script" uid="uid://dvbo4kq66vspy" path="res://ui/tower_ui_container.gd" id="10_hve3p"]
 [ext_resource type="Script" uid="uid://bdks3jvb17pts" path="res://ui/tower_inspector.gd" id="11_tower_inspector"]
+[ext_resource type="Script" uid="uid://ce133lcv024gx" path="res://ui/faction_selection.gd" id="12_faction_selection"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0kglt"]
 texture = ExtResource("1_3uhtl")
@@ -146,3 +147,12 @@ offset_right = -16.0
 offset_bottom = 345.0
 grow_horizontal = 0
 script = ExtResource("11_tower_inspector")
+
+[node name="FactionSelection" type="Control" parent="CanvasLayer" unique_id=1409845339]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("12_faction_selection")

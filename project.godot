@@ -22,6 +22,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 Events="*res://misc/events.gd"
+FactionProgress="*res://data/faction_progress.gd"
 
 [layer_names]
 
