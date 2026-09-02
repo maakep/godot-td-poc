@@ -65,7 +65,7 @@ func _build() -> void:
 	spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	content.add_child(spacer)
 	var hint := Label.new()
-	hint.text = "Press Escape to try again"
+	hint.text = "Press Escape to return to the menu"
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hint.add_theme_color_override("font_color", Color(0.72, 0.62, 0.66))
 	content.add_child(hint)
@@ -93,4 +93,4 @@ func _panel_style() -> StyleBoxFlat:
 func _unhandled_input(event: InputEvent) -> void:
 	if visible and event.is_action_pressed("ui_cancel"):
 		get_tree().paused = false
-		get_tree().reload_current_scene()
+		get_tree().change_scene_to_file("res://main_menu/main_menu.tscn")

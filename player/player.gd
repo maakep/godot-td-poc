@@ -39,13 +39,13 @@ var tower_just_placed: Node2D
 var run_started_at_msec := 0
 
 func _ready():
+	run_started_at_msec = Time.get_ticks_msec()
 	Events.on_wave_done.connect(get_wave_bounty)
 	Events.tower_clicked.connect(on_tower_clicked)
 	Events.on_enemy_killed.connect(func(): gold += 1) # should be bounty per enemy?
 	Events.on_enemy_destination_reached.connect(func(): lives -= 1)
 	Events.on_tower_ui_clicked.connect(select_tower_for_placing)
 	Events.on_gold_change.connect(_on_gold_changed)
-	FactionProgress.faction_selected.connect(_on_faction_selected)
 	tower_inspector.upgrade_requested.connect(upgrade_tower)
 	tower_inspector.sell_requested.connect(sell_tower)
 	tower_inspector.closed.connect(_on_tower_inspector_closed)
@@ -53,10 +53,6 @@ func _ready():
 	range_indicator.visible = false
 	add_child(range_indicator)
 	gold = 20
-
-func _on_faction_selected(_faction_id: String) -> void:
-	Events.start_run()
-	run_started_at_msec = Time.get_ticks_msec()
 
 func get_run_duration_seconds() -> int:
 	return roundi((Time.get_ticks_msec() - run_started_at_msec) / 1000.0)

@@ -22,6 +22,9 @@ func select_faction(faction_id: String) -> bool:
 	faction_selected.emit(faction_id)
 	return true
 
+func reset_run() -> void:
+	towers_built_this_run = 0
+
 func _on_tower_built(_tower: Node2D, _cell: Vector2i) -> void:
 	towers_built_this_run += 1
 	for faction_id in Factions.all:

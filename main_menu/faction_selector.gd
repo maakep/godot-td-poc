@@ -16,8 +16,10 @@ func _ready():
 		
 		btn.pressed.connect(
 			func(): 
-				FactionProgress.select_faction(fac)
-				get_tree().change_scene_to_file("res://game.tscn")
+				if FactionProgress.select_faction(fac):
+					Levels.reset_run()
+					FactionProgress.reset_run()
+					get_tree().change_scene_to_file("res://game.tscn")
 		)
 
 		margin_container.add_child(btn)

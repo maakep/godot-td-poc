@@ -92,4 +92,4 @@ func _panel_style() -> StyleBoxFlat:
 func _unhandled_input(event: InputEvent) -> void:
 	if visible and event.is_action_pressed("ui_cancel"):
 		get_tree().paused = false
-		get_tree().reload_current_scene()
+		get_tree().change_scene_to_file("res://main_menu/main_menu.tscn")

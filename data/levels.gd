@@ -12,7 +12,11 @@ static var all = [
 	#wave(100, [c("Goblin Queen", 1)]),
 ]
 
-static var waypoints = [Vector2i(32, 32)]
+const INITIAL_WAYPOINT := Vector2(32, 32)
+static var waypoints: Array[Vector2] = [INITIAL_WAYPOINT]
+
+static func reset_run() -> void:
+	waypoints = [INITIAL_WAYPOINT]
 
 static func wave(wave_bounty, creeps):
 	return {
