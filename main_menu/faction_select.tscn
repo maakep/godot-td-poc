@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://bj8bggtxjs5sw"]
+
+[ext_resource type="Script" uid="uid://bovj8528swudx" path="res://main_menu/faction_selector.gd" id="1_g7juw"]
+
+[node name="FactionSelect" type="Control" unique_id=524297437]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_g7juw")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=446828790]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -374.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_right = 32
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer" unique_id=979310012]
+layout_mode = 2
+
+[node name="FlowContainer" type="FlowContainer" parent="MarginContainer/ScrollContainer" unique_id=978952069]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+last_wrap_alignment = 2

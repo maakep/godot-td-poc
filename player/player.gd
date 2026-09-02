@@ -12,7 +12,9 @@ var lives: int:
 		return _lives
 	set(value):
 		_lives = value
-		Events.on_live_change.emit(_lives)
+		Events.on_life_change.emit(_lives)
+		if _lives <= 0:
+			Events.run_fail.emit()
 
 var _g: int
 var gold: int:
@@ -34,6 +36,7 @@ var selected_tower_id_for_placing = null
 var range_indicator
 var towers_by_cell: Dictionary = {}
 var tower_just_placed: Node2D
+var run_started_at_msec := 0
 
 func _ready():
 	Events.on_wave_done.connect(get_wave_bounty)
@@ -42,6 +45,7 @@ func _ready():
 	Events.on_enemy_destination_reached.connect(func(): lives -= 1)
 	Events.on_tower_ui_clicked.connect(select_tower_for_placing)
 	Events.on_gold_change.connect(_on_gold_changed)
+	FactionProgress.faction_selected.connect(_on_faction_selected)
 	tower_inspector.upgrade_requested.connect(upgrade_tower)
 	tower_inspector.sell_requested.connect(sell_tower)
 	tower_inspector.closed.connect(_on_tower_inspector_closed)
@@ -49,6 +53,27 @@ func _ready():
 	range_indicator.visible = false
 	add_child(range_indicator)
 	gold = 20
+
+func _on_faction_selected(_faction_id: String) -> void:
+	Events.start_run()
+	run_started_at_msec = Time.get_ticks_msec()
+
+func get_run_duration_seconds() -> int:
+	return roundi((Time.get_ticks_msec() - run_started_at_msec) / 1000.0)
+
+func get_tower_damage_ranking() -> Array:
+	var totals: Dictionary = {}
+	for tower_instance in towers_by_cell.values():
+		if !is_instance_valid(tower_instance):
+			continue
+		var tower_id: String = tower_instance.tower_id
+		var entry: Dictionary = totals.get(tower_id, {"name": tower_instance.tower.name, "damage": 0.0, "kills": 0})
+		entry.damage += tower_instance.damage_dealt
+		entry.kills += tower_instance.kills
+		totals[tower_id] = entry
+	var ranking: Array = totals.values()
+	ranking.sort_custom(func(a: Dictionary, b: Dictionary): return a.damage > b.damage)
+	return ranking
 
 
 func select_tower_for_placing(tower_id):

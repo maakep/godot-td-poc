@@ -83,6 +83,6 @@ func record_damage(amount: float, killed: bool) -> void:
 
 func _on_tower_area_2d_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed and !event.shift_pressed and !Input.is_key_pressed(KEY_SHIFT):
 			viewport.set_input_as_handled()
 			Events.tower_clicked.emit(self)

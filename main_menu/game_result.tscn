@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://fy58n8kd1084"]
+
+[ext_resource type="Script" uid="uid://c353f5k5gv8oo" path="res://main_menu/game_result.gd" id="1_ru1w7"]
+[ext_resource type="Texture2D" uid="uid://cfypdwl0vogqk" path="res://green.png" id="2_prq4a"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lupu7"]
+bg_color = Color(0.7172415, 0.5800598, 0.27098992, 1)
+
+[node name="GameResult" type="Control" unique_id=1272387259]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ru1w7")
+
+[node name="Bg" type="Panel" parent="." unique_id=1094489180]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lupu7")
+
+[node name="WinLose" type="RichTextLabel" parent="." unique_id=1772165988]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -46.0
+offset_top = 70.0
+offset_right = 39.0
+offset_bottom = 110.0
+grow_horizontal = 2
+text = "Win!"
+scroll_active = false
+horizontal_alignment = 1
+
+[node name="GameInfo" type="RichTextLabel" parent="." unique_id=1080677180]
+layout_mode = 0
+offset_left = 446.0
+offset_top = 121.0
+offset_right = 691.0
+offset_bottom = 161.0
+
+[node name="ContinueBtn" type="TextureButton" parent="." unique_id=351673365]
+layout_mode = 0
+offset_left = 1000.0
+offset_top = 589.0
+offset_right = 1132.0
+offset_bottom = 630.0
+texture_normal = ExtResource("2_prq4a")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="cntlbl" type="Label" parent="ContinueBtn" unique_id=1996401322]
+layout_mode = 0
+offset_left = 29.0
+offset_top = 8.0
+offset_right = 100.0
+offset_bottom = 31.0
+text = "Continue"

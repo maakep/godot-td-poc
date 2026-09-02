@@ -9,9 +9,11 @@
 [ext_resource type="Script" uid="uid://c7l3gmt7um1rw" path="res://spawn/spawner.gd" id="6_ufcjl"]
 [ext_resource type="Script" uid="uid://w62ym3parlfc" path="res://player/player.gd" id="7_64int"]
 [ext_resource type="Script" uid="uid://bwptv50vdh3dl" path="res://gold_ui.gd" id="9_62qko"]
+[ext_resource type="Script" uid="uid://3wox2e51b375" path="res://ui/lives_ui.gd" id="10_215e1"]
 [ext_resource type="Script" uid="uid://dvbo4kq66vspy" path="res://ui/tower_ui_container.gd" id="10_hve3p"]
 [ext_resource type="Script" uid="uid://bdks3jvb17pts" path="res://ui/tower_inspector.gd" id="11_tower_inspector"]
-[ext_resource type="Script" uid="uid://ce133lcv024gx" path="res://ui/faction_selection.gd" id="12_faction_selection"]
+[ext_resource type="Script" uid="uid://bx6obxibbvypx" path="res://ui/victory_screen.gd" id="13_victory_screen"]
+[ext_resource type="Script" uid="uid://b6latieusx3mh" path="res://ui/defeat_screen.gd" id="14_defeat_screen"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0kglt"]
 texture = ExtResource("1_3uhtl")
@@ -106,6 +108,24 @@ shortcut_keys_enabled = false
 text_direction = 2
 script = ExtResource("9_62qko")
 
+[node name="Lives" type="RichTextLabel" parent="CanvasLayer" unique_id=1341643180]
+modulate = Color(0.870588, 0.752941, 0, 1)
+custom_minimum_size = Vector2(30, 30)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -41.5
+offset_right = 41.5
+offset_bottom = 30.0
+grow_horizontal = 2
+bbcode_enabled = true
+text = "[b]100[/b]"
+scroll_active = false
+shortcut_keys_enabled = false
+horizontal_alignment = 1
+text_direction = 2
+script = ExtResource("10_215e1")
+
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer" unique_id=1012175240]
 anchors_preset = 15
 anchor_right = 1.0
@@ -148,11 +168,20 @@ offset_bottom = 345.0
 grow_horizontal = 0
 script = ExtResource("11_tower_inspector")
 
-[node name="FactionSelection" type="Control" parent="CanvasLayer" unique_id=1409845339]
+[node name="VictoryScreen" type="Control" parent="CanvasLayer" unique_id=110334826]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("12_faction_selection")
+script = ExtResource("13_victory_screen")
+
+[node name="DefeatScreen" type="Control" parent="CanvasLayer" unique_id=1196117198]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("14_defeat_screen")

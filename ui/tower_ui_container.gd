@@ -3,9 +3,10 @@ extends HFlowContainer
 var button = preload("res://ui/TowerUIButton.tscn")
 
 func _ready():
-	FactionProgress.faction_selected.connect(_rebuild)
+	FactionProgress.faction_selected.connect(rebuild)
+	rebuild()
 
-func _rebuild(_faction_id := "") -> void:
+func rebuild(_faction_id := "") -> void:
 	for child in get_children():
 		child.queue_free()
 	var towers = Towers.get_buyable_towers()

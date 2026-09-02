@@ -29,6 +29,8 @@ func enemy_gone():
 		set_waypoint_random_position()
 		lvl_active = false
 		Events.on_wave_done.emit(Levels.all[lvl])
+		if lvl >= Levels.all.size() - 1:
+			Events.run_win.emit()
 
 func _input(e):
 	if e is InputEventKey and e.pressed and e.keycode == KEY_R:

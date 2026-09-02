@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://54x7cscjnrc6"]
+
+[ext_resource type="Texture2D" uid="uid://cfypdwl0vogqk" path="res://green.png" id="1_r0lsj"]
+
+[node name="FactionSelection" type="TextureButton" unique_id=861370479]
+custom_minimum_size = Vector2(100, 100)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1052.0
+offset_bottom = -548.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("1_r0lsj")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="." unique_id=1665583216]
+layout_mode = 0
+offset_left = 22.0
+offset_top = 73.0
+offset_right = 79.0
+offset_bottom = 96.0
+text = "Human"
