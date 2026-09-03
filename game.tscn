@@ -12,8 +12,7 @@
 [ext_resource type="Script" uid="uid://3wox2e51b375" path="res://ui/lives_ui.gd" id="10_215e1"]
 [ext_resource type="Script" uid="uid://dvbo4kq66vspy" path="res://ui/tower_ui_container.gd" id="10_hve3p"]
 [ext_resource type="Script" uid="uid://bdks3jvb17pts" path="res://ui/tower_inspector.gd" id="11_tower_inspector"]
-[ext_resource type="Script" uid="uid://bx6obxibbvypx" path="res://ui/victory_screen.gd" id="13_victory_screen"]
-[ext_resource type="Script" uid="uid://b6latieusx3mh" path="res://ui/defeat_screen.gd" id="14_defeat_screen"]
+[ext_resource type="PackedScene" uid="uid://fy58n8kd1084" path="res://main_menu/game_result.tscn" id="13_game_result"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0kglt"]
 texture = ExtResource("1_3uhtl")
@@ -168,20 +167,5 @@ offset_bottom = 345.0
 grow_horizontal = 0
 script = ExtResource("11_tower_inspector")
 
-[node name="VictoryScreen" type="Control" parent="CanvasLayer" unique_id=110334826]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("13_victory_screen")
-
-[node name="DefeatScreen" type="Control" parent="CanvasLayer" unique_id=1196117198]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("14_defeat_screen")
+[node name="GameResult" parent="CanvasLayer" instance=ExtResource("13_game_result")]
+visible = false
