@@ -2,9 +2,19 @@
 
 [ext_resource type="Script" uid="uid://csxu2s48w0s8i" path="res://creeps/enemy.gd" id="1_dofne"]
 [ext_resource type="Texture2D" uid="uid://4s8yq6mcfpcd" path="res://icon.svg" id="2_nn7pv"]
+[ext_resource type="Script" uid="uid://bv4i8qhmy0kp1" path="res://effects/status_effect_component.gd" id="3_status"]
+[ext_resource type="Script" uid="uid://cmfg3xujx6r86" path="res://effects/status_effect_view.gd" id="4_view"]
+[ext_resource type="Shader" uid="uid://bcuqaliv67q78" path="res://effects/status_effect_overlay.gdshader" id="5_shader"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qd6lv"]
 size = Vector2(130.569, 128.151)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_status"]
+shader = ExtResource("5_shader")
+shader_parameter/frost_color = Color(0.25, 0.78, 1, 1)
+shader_parameter/poison_color = Color(0.58, 0.14, 0.78, 1)
+shader_parameter/fire_color = Color(1, 0.3, 0.055, 1)
+shader_parameter/arcane_color = Color(1, 0.88, 0.2, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_65qms"]
 bg_color = Color(0.7919998, 0, 0.22029126, 1)
@@ -59,7 +69,18 @@ shape = SubResource("RectangleShape2D_qd6lv")
 position = Vector2(-4.053116e-06, -5.722046e-06)
 texture = ExtResource("2_nn7pv")
 
+[node name="StatusEffectView" type="Sprite2D" parent="." unique_id=949632603]
+z_index = 2
+material = SubResource("ShaderMaterial_status")
+scale = Vector2(1.45, 1.45)
+texture = ExtResource("2_nn7pv")
+script = ExtResource("4_view")
+
+[node name="StatusEffects" type="Node" parent="." unique_id=1204284532]
+script = ExtResource("3_status")
+
 [node name="HP_bar" type="ProgressBar" parent="." unique_id=1927463011]
+z_index = 3
 offset_left = -65.21739
 offset_top = -82.608696
 offset_right = 65.21739

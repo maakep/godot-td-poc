@@ -4,7 +4,7 @@ class_name Levels
 var ref = Enemies
 
 static var all = [
-	wave(10, [c("Goblin", 10, 0.1)]),
+	wave(10, [c("Goblin", 10, 0.5)]),
 	#wave(50, [c("Goblin", 5), c("Goblin King", 1, 1), c("Kobold", 5)]),
 	#wave(10, [c("Bee", 3), c("Bee", 3), c("Bee", 3)]),
 	#wave(15, [c("Bee", 40)]),

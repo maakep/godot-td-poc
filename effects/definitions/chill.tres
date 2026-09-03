@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="StatusEffectDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://effects/status_effect_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"chill"
+resistance_tag = &"slow"
+stack_policy = 3
+max_stacks = 5
+affects_move_speed = true
+visual_channel = 0
+visual_full_strength = 0.5
+visual_min_intensity = 0.3

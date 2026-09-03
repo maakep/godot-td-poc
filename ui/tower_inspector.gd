@@ -151,10 +151,31 @@ func _upgrade_tooltip(data: Dictionary) -> String:
 
 func _effects_text(effects: Array) -> String:
 	var names: Array[String] = []
-	for effect in effects:
-		match effect.handler:
-			"slow": names.append("Slow %d%% for %ss" % [roundi(effect.val * 100), effect.dur])
-			"poison": names.append("Poison: %s damage/s for %ss" % [effect.dmg, effect.dur])
-			"burn": names.append("Burn: %s damage/s for %ss" % [effect.dmg, effect.dur])
-			_: names.append(effect.handler.capitalize())
+	for effect: StatusEffectApplication in effects:
+		if effect == null or effect.definition == null:
+			continue
+
+		var definition := effect.definition
+		var details: Array[String] = []
+		if definition.affects_move_speed:
+			details.append("%d%% slow" % roundi(effect.magnitude * 100.0))
+		if definition.deals_periodic_damage and effect.tick_interval > 0.0:
+			var damage_per_second := effect.damage_per_tick / effect.tick_interval
+			details.append("%s damage/s" % _number_text(damage_per_second))
+
+		var effect_name := String(definition.id).capitalize()
+		if details.is_empty():
+			names.append("%s for %ss" % [effect_name, _number_text(effect.duration)])
+		else:
+			names.append("%s: %s for %ss" % [
+				effect_name,
+				", ".join(details),
+				_number_text(effect.duration),
+			])
 	return ", ".join(names)
+
+
+func _number_text(value: float) -> String:
+	if is_equal_approx(value, roundf(value)):
+		return str(roundi(value))
+	return String.num(value, 2)

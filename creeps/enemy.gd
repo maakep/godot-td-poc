@@ -4,7 +4,7 @@ class_name Enemy
 var path
 var next_target
 var my_waypoints = Levels.waypoints.duplicate()
-var active_effects = {}
+var resistance_tags: Dictionary[StringName, bool] = {}
 
 var tilemap # set by creator
 
@@ -12,16 +12,23 @@ var data # emeies.gd data object set by creator
 
 @export var ms: float
 @export var hp: float
-var ms_modifiers = {}
 var ms_modifier: float = 1
 
 var flying = false
 
 @onready var hp_bar = $HP_bar
 @onready var anim: AnimationPlayer = $AnimationPlayer
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var status_effects: StatusEffectComponent = $StatusEffects
+@onready var status_effect_view: StatusEffectView = $StatusEffectView
 
 func _ready():
+	for tag in data.get("resist", []):
+		resistance_tags[StringName(tag)] = true
+
+	status_effects.setup(self)
+	status_effects.speed_multiplier_changed.connect(_on_speed_multiplier_changed)
+	status_effects.effects_changed.connect(status_effect_view.set_effects)
+
 	path = Pathfinder.instance.calc_path(null, null, flying)
 	next_target = path.pop_front()
 	Events.tower_built.connect(on_tower_built)
@@ -30,26 +37,6 @@ func _ready():
 var waypoints_reached = 0
 func _physics_process(delta):
 	global_position = global_position.move_toward(next_target, ms * ms_modifier * delta)
-	
-	## -- ## -- ##
-	
-	var now = Time.get_ticks_msec()
-	var expired_effects = []
-	for effect_name in active_effects.keys():
-		var effect = active_effects[effect_name]
-		
-		if effect.tick_rate && now >= effect.next_tick:
-			effect.tick.call()
-			effect.next_tick += effect.tick_rate * 1000
-		
-		if (now >= effect.end_time):
-			expired_effects.append(effect_name)
-			effect.handle_end.call()
-			
-	for effect in expired_effects:
-		active_effects.erase(effect)
-		
-	## -- ## -- ##
 	
 	if global_position.distance_to(next_target) < 0.01:
 		for i in range(my_waypoints.size()):
@@ -88,96 +75,24 @@ func take_damage(dmg: float, source_tower: Node2D = null):
 	
 	if killed:
 		Events.on_enemy_killed.emit()
-		
-		for effect in active_effects:
-			var e = active_effects[effect]
-			if e.has("on_death") && e.on_death != null:
-				e.on_death.call()
-		
+		status_effects.notify_target_death()
 		queue_free()
 
 func _on_area_entered(area):
 	pass
 	#take_damage(100)
 
-		
-var effect_dict = {
-	"slow": _handle_slow,
-	"poison": _handle_poison,
-	"burn": _handle_burn,
-}
 
-func apply_effect(effect):
-	effect_dict[effect.handler].call(effect)
-	
-func ts(dur):
-	if dur == null:
-		return null
-	return Time.get_ticks_msec() + int(dur * 1000)
+func apply_effect(application: StatusEffectApplication, source: Node = null) -> bool:
+	if is_queued_for_deletion() or application == null or application.definition == null:
+		return false
 
-func add_active_effect(effect, tick, handle_end):
-	var name = effect.name
-	
-	if effect.stacking:
-		name = name + str(randi() % 1000)
-	
-	active_effects[name] = {
-		"end_time": ts(effect.dur),
-		"tick": tick,
-		"tick_rate": effect.get("tick_rate", null),
-		"next_tick": ts(effect.get("tick_rate", null)),
-		"on_death": effect.get("on_death", null),
-		"handle_end": func(): handle_end.call(name),
-	}
-	
-	return name
-	
-func recalculate_ms_modifier():
-	var modifier = 1
-	for mod in ms_modifiers:
-		modifier = modifier * (1 - ms_modifiers[mod])
-	
-	ms_modifier = modifier
+	var resistance_tag := application.definition.resistance_tag
+	if resistance_tag != &"" and resistance_tags.has(resistance_tag):
+		return false
 
-func _handle_slow(effect):
-	var eff_id = add_active_effect(
-		effect,
-		func():
-			pass, 
-		func(id):
-			ms_modifiers.erase(id)
-			recalculate_ms_modifier()
-			sprite.self_modulate = Color(1, 1, 1)
-	)
-	
-	ms_modifiers[eff_id] = effect.val
-	recalculate_ms_modifier()
-	sprite.self_modulate = Color(0, 0, 1, 1)
-	
+	return status_effects.apply(application, source)
 
-func _handle_poison(effect):
-	var eff_id = add_active_effect(
-		effect,
-		func():
-			take_damage(effect.dmg, effect.get("source_tower", null)),
-		func(id):
-			ms_modifiers.erase(id)
-			recalculate_ms_modifier()
-			sprite.self_modulate = Color(1, 1, 1)			
-	)
-	
-	ms_modifiers[eff_id] = effect.val
-	recalculate_ms_modifier()
-	sprite.self_modulate = Color(0.5, 0, 0.5)
-	
-func _handle_burn(effect):
-	var _eff_id = add_active_effect(
-			effect,
-		func():
-			take_damage(effect.dmg, effect.get("source_tower", null)),
-			func(_id):
-				pass,
-		)
-	
-	sprite.self_modulate = Color(0.825, 0.357, 0.212, 1.0)	
-	
+
+func _on_speed_multiplier_changed(multiplier: float) -> void:
+	ms_modifier = multiplier

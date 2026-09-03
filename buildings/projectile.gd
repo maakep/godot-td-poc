@@ -50,8 +50,8 @@ func _on_area_entered(enemy):
 			var aoe_enemy = shapecast.get_collider(i)
 			
 			if aoe_enemy != null and aoe_enemy != enemy:
-				aoe_enemy.take_damage(damage, source_tower)
 				apply_effects(aoe_enemy)
+				aoe_enemy.take_damage(damage, source_tower)
 	
 	enemy.take_damage(damage, source_tower)
 		
@@ -62,16 +62,8 @@ func _on_area_entered(enemy):
 		piercing -= 1
 
 func apply_effects(enemy):
-	var resists = enemy.data.resist
-	
 	for effect in effects:
-		var res = resists.any(func(x): return x == effect.name)
-		if res:
-			continue # resisted the effect
-		
-		var effect_with_source = effect.duplicate()
-		effect_with_source.source_tower = source_tower
-		enemy.apply_effect(effect_with_source)
+		enemy.apply_effect(effect, source_tower)
 		
 		
 		

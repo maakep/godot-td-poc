@@ -22,15 +22,27 @@ func _ready():
 	Events.on_enemy_killed.connect(enemy_gone)
 
 func enemy_gone():
-	creeps_to_kill -= 1
-	
-	# Wave done!
-	if creeps_to_kill <= 0 && creep_container.get_child_count() <= 1:
+	if not lvl_active:
+		return
+
+	creeps_to_kill = maxi(creeps_to_kill - 1, 0)
+	if creeps_to_kill == 0:
+		_complete_wave()
+
+
+func _complete_wave() -> void:
+	# Mark the wave complete before emitting signals so duplicate kill/destination
+	# notifications cannot complete it twice.
+	if not lvl_active:
+		return
+
+	lvl_active = false
+	var final_wave := lvl >= Levels.all.size() - 1
+	if not final_wave:
 		set_waypoint_random_position()
-		lvl_active = false
-		Events.on_wave_done.emit(Levels.all[lvl])
-		if lvl >= Levels.all.size() - 1:
-			Events.run_win.emit()
+	Events.on_wave_done.emit(Levels.all[lvl])
+	if final_wave:
+		Events.run_win.emit()
 
 func get_completed_wave_count() -> int:
 	if lvl < 0:
