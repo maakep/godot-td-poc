@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="StatusEffectDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://effects/status_effect_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"oil"
+resistance_tag = &"slow"
+tags = Array[StringName]([&"oil"])
+stack_policy = 2
+max_stacks = 3
+affects_move_speed = true
+visual_channel = 3
+visual_full_strength = 0.45
+visual_min_intensity = 0.35

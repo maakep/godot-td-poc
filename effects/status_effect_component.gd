@@ -8,6 +8,7 @@ signal speed_multiplier_changed(multiplier: float)
 ## script work when hundreds of enemies are alive.
 const UPDATE_INTERVAL := 0.05
 const TICK_EPSILON := 0.00001
+const REACTIONS := preload("res://effects/status_effect_reactions.gd")
 
 var _target: Node
 var _effects: Array[StatusEffectRuntime] = []
@@ -26,6 +27,16 @@ func setup(target: Node) -> void:
 func apply(application: StatusEffectApplication, source: Node = null) -> bool:
 	if _target == null or application == null or not application.is_valid():
 		push_warning("Rejected an invalid status effect application")
+		return false
+	if REACTIONS.try_react(self, application, source):
+		return true
+	if application.definition.transient:
+		return false
+	return apply_direct(application, source)
+
+
+func apply_direct(application: StatusEffectApplication, source: Node = null) -> bool:
+	if _target == null or application == null or not application.is_valid():
 		return false
 
 	var definition := application.definition
@@ -73,6 +84,32 @@ func apply(application: StatusEffectApplication, source: Node = null) -> bool:
 
 	_publish_changes()
 	return true
+
+
+func get_target() -> Node:
+	return _target
+
+
+func has_tag(tag: StringName) -> bool:
+	for runtime in _effects:
+		if tag in runtime.definition.tags:
+			return true
+	return false
+
+
+func consume_tag(tag: StringName) -> int:
+	var stacks := 0
+	for index in range(_effects.size() - 1, -1, -1):
+		var runtime := _effects[index]
+		if tag in runtime.definition.tags:
+			stacks += runtime.stack_count
+			_remove_at(index)
+	if stacks > 0:
+		if _effects.is_empty():
+			set_physics_process(false)
+			_update_accumulator = 0.0
+		_publish_changes()
+	return stacks
 
 
 func get_active_effects() -> Array[StatusEffectRuntime]:

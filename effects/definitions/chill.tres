@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = &"chill"
 resistance_tag = &"slow"
+tags = Array[StringName]([&"frost"])
 stack_policy = 3
 max_stacks = 5
 affects_move_speed = true

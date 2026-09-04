@@ -8,7 +8,7 @@ const TowerRangeIndicator = preload("res://buildings/tower_range_indicator.gd")
 
 var _lives = 100
 var lives: int:
-	get: 
+	get:
 		return _lives
 	set(value):
 		_lives = value
@@ -23,7 +23,6 @@ var gold: int:
 	set(value):
 		_g = value
 		Events.on_gold_change.emit(_g)
-
 
 
 @onready var tilemap = $"../Layers/TileMapLayer"
@@ -52,7 +51,7 @@ func _ready():
 	range_indicator = TowerRangeIndicator.new()
 	range_indicator.visible = false
 	add_child(range_indicator)
-	gold = 20
+	gold = 15
 
 func get_run_duration_seconds() -> int:
 	return roundi((Time.get_ticks_msec() - run_started_at_msec) / 1000.0)
@@ -77,7 +76,7 @@ func select_tower_for_placing(tower_id):
 		tower_inspector.hide_inspector()
 	selected_tower_id_for_placing = tower_id
 	var tower_data = Towers.get_tower(tower_id)
-	range_indicator.set_tower_range(tower_data.range)
+	range_indicator.set_tower_range(tower_data.get("range", 0))
 	range_indicator.visible = true
 
 
@@ -102,7 +101,7 @@ func _unhandled_input(e):
 		tower_inspector.hide_inspector()
 		return
 
-var last_hovered_cell = Vector2i(0,0)
+var last_hovered_cell = Vector2i(0, 0)
 var placable = false
 
 func _physics_process(_delta):
@@ -196,7 +195,7 @@ func on_tower_clicked(t_obj):
 	selected_tower_id_for_placing = null
 	mousemap.set_cell(last_hovered_cell)
 	range_indicator.position = t_obj.position
-	range_indicator.set_tower_range(t_obj.tower.range)
+	range_indicator.set_tower_range(t_obj.tower.get("range", 0))
 	range_indicator.set_placement_valid(true)
 	range_indicator.visible = true
 	tower_inspector.show_tower(t_obj, gold)
@@ -215,13 +214,13 @@ func upgrade_tower(t_obj, upgrade_id: String) -> void:
 		return
 	gold -= upgrade_data.cost
 	t_obj.load_tower(upgrade_id)
-	range_indicator.set_tower_range(t_obj.tower.range)
+	range_indicator.set_tower_range(t_obj.tower.get("range", 0))
 	tower_inspector.refresh(gold)
 
 func sell_tower(t_obj) -> void:
 	if !is_instance_valid(t_obj):
 		return
-	var sell_price := ceili(t_obj.tower.cost / 2.0)
+	var sell_price := Towers.get_sell_price(t_obj.tower)
 	Events.on_obstacle_removed.emit(t_obj, t_obj.cell)
 	towers_by_cell.erase(t_obj.cell)
 	gold += sell_price

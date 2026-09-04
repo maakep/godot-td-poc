@@ -1,14 +1,14 @@
 shader_type canvas_item;
 render_mode unshaded, blend_mix;
 
-// x: frost, y: poison, z: fire, w: arcane/future effects.
+// x: frost, y: poison, z: fire, w: oil.
 instance uniform vec4 effect_intensity = vec4(0.0);
 instance uniform float effect_phase = 0.0;
 
 uniform vec4 frost_color : source_color = vec4(0.25, 0.78, 1.0, 1.0);
 uniform vec4 poison_color : source_color = vec4(0.58, 0.14, 0.78, 1.0);
 uniform vec4 fire_color : source_color = vec4(1.0, 0.30, 0.055, 1.0);
-uniform vec4 arcane_color : source_color = vec4(1.0, 0.88, 0.20, 1.0);
+uniform vec4 oil_color : source_color = vec4(0.035, 0.03, 0.025, 1.0);
 
 
 float disc(vec2 point, vec2 center, float radius) {
@@ -61,18 +61,22 @@ void fragment() {
 	}
 	fire *= effect_intensity.z;
 
-	// A reusable fourth channel for stun, holy, electric, or other future
-	// effects. It deliberately occupies the top arc.
-	float arcane = ring(point, vec2(0.0, -0.50), 0.28, 0.025);
-	arcane *= step(point.y, -0.45) * (0.45 + 0.55 * sin(time * 10.0) * sin(time * 10.0));
-	arcane *= effect_intensity.w;
+	// Oil clings low as irregular black globules and a pooled base.
+	float oil = disc(point, vec2(sin(time * 0.8) * 0.08, 0.66), 0.25) * 0.38;
+	for (int index = 0; index < 5; index++) {
+		float seed = float(index) / 5.0;
+		float x = -0.48 + seed * 0.96 + sin(time * 1.2 + seed * 17.0) * 0.06;
+		float y = 0.50 + sin(time * 1.5 + seed * 11.0) * 0.12;
+		oil += disc(point, vec2(x, y), 0.055 + seed * 0.02);
+	}
+	oil *= effect_intensity.w;
 
-	float total = frost + poison + fire + arcane;
+	float total = frost + poison + fire + oil;
 	vec3 weighted_color =
 		frost_color.rgb * frost
 		+ poison_color.rgb * poison
 		+ fire_color.rgb * fire
-		+ arcane_color.rgb * arcane;
+		+ oil_color.rgb * oil;
 	vec3 final_color = weighted_color / max(total, 0.0001);
 	COLOR = vec4(final_color, clamp(total, 0.0, 0.92));
 }

@@ -13,12 +13,14 @@ enum VisualChannel {
 	FROST,
 	POISON,
 	FIRE,
-	ARCANE,
+	OIL,
 }
 
 @export_group("Identity")
 @export var id: StringName
 @export var resistance_tag: StringName
+@export var tags: Array[StringName] = []
+@export var transient: bool = false
 
 @export_group("Rules")
 @export var stack_policy: StackPolicy = StackPolicy.REFRESH

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="StatusEffectDefinition" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://effects/status_effect_definition.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"toxic_combustion"
+stack_policy = 1
+max_stacks = 1
+affects_move_speed = true
+deals_periodic_damage = true
+visual_channel = 1
+visual_full_strength = 0.35
+visual_min_intensity = 0.55

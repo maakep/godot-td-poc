@@ -12,47 +12,56 @@ var tilemap
 
 var tower_id # set by creator
 var tower # set by load_tower
+var behavior := "projectile"
 var damage_dealt: float = 0.0
 var kills: int = 0
 
 var proj = preload("res://buildings/projectile.tscn")
 
 func _ready():
-	load_tower(tower_id)
-	
 	area.connect("area_entered", Callable(self, "_on_area_entered"))
 	area.connect("area_exited", Callable(self,"_on_area_exited"))
+	attack_timer.timeout.connect(attack)
+	load_tower(tower_id)
 
 func load_tower(id):
 	var twr = Towers.get_tower(id)
+	if twr.is_empty():
+		push_error("Unknown tower: %s" % id)
+		return
 	tower_id = id
-	col.shape.radius = twr.range
-	attack_timer.wait_time = twr.atkspd
-	attack_targets = twr.targets
+	behavior = twr.get("behavior", "projectile")
+	col.shape.radius = maxf(float(twr.get("range", 0)), 1.0)
+	attack_timer.wait_time = float(twr.get("aura_interval", twr.get("atkspd", 1.0)))
+	attack_targets = int(twr.get("targets", 1))
+	area.monitoring = behavior != "blocker"
 	$Sprite2D.texture = twr.sprite
 	tower = twr
+	if behavior == "aura" and not enemies_in_range.is_empty():
+		attack()
 
 
 var attacking = false
 
 func attack():
-	if !attack_timer.is_stopped():
+	if behavior == "blocker" or !attack_timer.is_stopped():
 		return
-	
-	
+	enemies_in_range = enemies_in_range.filter(func(enemy): return is_instance_valid(enemy) and not enemy.is_queued_for_deletion())
 	var enemies = get_closest_enemies(attack_targets)
 	if enemies.size() == 0:
 		return
-	
-	for i in range(enemies.size()):
-		var p = proj.instantiate()
-		p.direction = global_position.direction_to(enemies[i].global_position)
-		p.load_projectile(tower.proj, self)
-		call_deferred("add_child", p)
-	
+
+	if behavior == "aura":
+		for enemy in enemies:
+			enemy.apply_effect(tower.aura_effect, self)
+	else:
+		for enemy in enemies:
+			var p = proj.instantiate()
+			p.direction = global_position.direction_to(enemy.global_position)
+			p.load_projectile(tower.proj, self)
+			call_deferred("add_child", p)
+
 	attack_timer.start()
-	await attack_timer.timeout
-	attack()
 	
 
 func _on_area_entered(obj):

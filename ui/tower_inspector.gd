@@ -73,7 +73,7 @@ func _ready() -> void:
 	content.add_child(upgrades_box)
 
 	sell_button = Button.new()
-	sell_button.tooltip_text = "Remove this tower and receive half of its current cost."
+	sell_button.tooltip_text = "Remove this tower."
 	sell_button.pressed.connect(func(): sell_requested.emit(selected_tower))
 	content.add_child(sell_button)
 	visible = false
@@ -107,7 +107,8 @@ func refresh(gold: int = available_gold) -> void:
 		var upgrade_data = Towers.get_tower(upgrade_id)
 		var upgrade_button = TOWER_ICON_BUTTON.instantiate()
 		upgrade_button.setup(upgrade_data, upgrade_id, upgrade_data.cost, available_gold >= upgrade_data.cost)
-		upgrade_button.get_node("TextureButton").tooltip_text = _upgrade_tooltip(upgrade_data)
+		if available_gold >= upgrade_data.cost:
+			upgrade_button.get_node("TextureButton").tooltip_text = _upgrade_tooltip(upgrade_data)
 		upgrade_button.activated.connect(func(id): upgrade_requested.emit(selected_tower, id))
 		upgrades_box.add_child(upgrade_button)
 
@@ -117,7 +118,7 @@ func refresh(gold: int = available_gold) -> void:
 		final_label.add_theme_color_override("font_color", Color(0.65, 0.7, 0.75))
 		upgrades_box.add_child(final_label)
 
-	var sell_price := ceili(data.cost / 2.0)
+	var sell_price := Towers.get_sell_price(data)
 	sell_button.text = "Sell - %d gold" % sell_price
 
 
@@ -133,6 +134,14 @@ func _process(_delta: float) -> void:
 
 
 func _stats_text(data: Dictionary) -> String:
+	var behavior: String = data.get("behavior", "projectile")
+	if behavior == "blocker":
+		return "Blocks enemy paths."
+	if behavior == "aura":
+		return "Radius: %s\nEffect: %s" % [
+			data.get("range", 0),
+			_effects_text([data.aura_effect]),
+		]
 	var projectile = data.proj
 	var lines = [
 		"Damage: %s    Targets: %s" % [projectile.damage, data.targets],
@@ -156,6 +165,10 @@ func _effects_text(effects: Array) -> String:
 			continue
 
 		var definition := effect.definition
+		var effect_name := String(definition.id).capitalize()
+		if definition.transient:
+			names.append(effect_name)
+			continue
 		var details: Array[String] = []
 		if definition.affects_move_speed:
 			details.append("%d%% slow" % roundi(effect.magnitude * 100.0))
@@ -163,7 +176,6 @@ func _effects_text(effects: Array) -> String:
 			var damage_per_second := effect.damage_per_tick / effect.tick_interval
 			details.append("%s damage/s" % _number_text(damage_per_second))
 
-		var effect_name := String(definition.id).capitalize()
 		if details.is_empty():
 			names.append("%s for %ss" % [effect_name, _number_text(effect.duration)])
 		else:

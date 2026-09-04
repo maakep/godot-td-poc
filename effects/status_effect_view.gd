@@ -40,7 +40,7 @@ func _get_channel(values: Vector4, channel: int) -> float:
 			return values.y
 		StatusEffectDefinition.VisualChannel.FIRE:
 			return values.z
-		StatusEffectDefinition.VisualChannel.ARCANE:
+		StatusEffectDefinition.VisualChannel.OIL:
 			return values.w
 	return 0.0
 
@@ -53,6 +53,6 @@ func _set_channel(values: Vector4, channel: int, value: float) -> Vector4:
 			values.y = value
 		StatusEffectDefinition.VisualChannel.FIRE:
 			values.z = value
-		StatusEffectDefinition.VisualChannel.ARCANE:
+		StatusEffectDefinition.VisualChannel.OIL:
 			values.w = value
 	return values

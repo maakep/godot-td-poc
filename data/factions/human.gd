@@ -1,5 +1,7 @@
 class_name HumanFaction
 
+const IMPACT := preload("res://effects/applications/impact.tres")
+
 static var data := {
 	"id": "human",
 	"name": "Kingdom of Ardent",
@@ -30,7 +32,11 @@ static var data := {
 		"cannon": {
 			"name": "Cannon Tower", "description": "Fires powerful long-range shells that damage enemies in a large area.", "atkspd": 2, "range": 200,
 			"sprite": preload("res://buildings/projectile_sprites/brown.png"), "targets": 1, "cost": 3, "buyable": true,
-			"proj": {"damage": 10, "range": 50, "speed": 500, "sprite": preload("res://buildings/projectile_sprites/brown.png"), "aoe": 100, "piercing": 0, "effects": []}, "upgrades": []
+			"proj": {"damage": 10, "range": 50, "speed": 500, "sprite": preload("res://buildings/projectile_sprites/brown.png"), "aoe": 100, "piercing": 0, "effects": [IMPACT]}, "upgrades": []
+		},
+		"palisade": {
+			"name": "Palisade", "description": "A cheap wooden barrier for shaping enemy paths.", "behavior": "blocker", "range": 0,
+			"sprite": preload("res://buildings/tower_sprites/palisade.svg"), "cost": 1, "sell_value": 0, "buyable": true, "upgrades": []
 		}
 	}
 }

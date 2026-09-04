@@ -4,6 +4,7 @@ const FROST_GUARD_FREEZE := preload("res://effects/applications/frost_guard_free
 const ICE_CHILL := preload("res://effects/applications/ice_chill.tres")
 const POISON := preload("res://effects/applications/poison.tres")
 const BURN := preload("res://effects/applications/burn.tres")
+const FROST_AURA := preload("res://effects/applications/frost_aura.tres")
 
 static var data := {
 	"id": "elemental",
@@ -31,6 +32,11 @@ static var data := {
 			"name": "Fire Tower", "description": "A long-range tower that ignites up to three enemies, dealing burn damage over time.", "atkspd": 2, "range": 200,
 			"sprite": preload("res://buildings/projectile_sprites/orange.png"), "targets": 3, "cost": 2, "buyable": true,
 			"proj": {"damage": 10, "range": 50, "speed": 500, "sprite": preload("res://buildings/projectile_sprites/orange.png"), "aoe": 0, "piercing": 0, "effects": [BURN]}, "upgrades": []
+		},
+		"frost_monolith": {
+			"name": "Frost Monolith", "description": "A silent ward that slows every enemy passing nearby.", "behavior": "aura", "range": 90, "aura_interval": 0.25,
+			"aura_effect": FROST_AURA, "targets": 64, "sprite": preload("res://buildings/tower_sprites/frost_monolith.svg"),
+			"cost": 5, "buyable": true, "upgrades": []
 		}
 	}
 }

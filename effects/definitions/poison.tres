@@ -6,6 +6,7 @@
 script = ExtResource("1")
 id = &"poison"
 resistance_tag = &"poison"
+tags = Array[StringName]([&"poison"])
 stack_policy = 0
 max_stacks = 1
 affects_move_speed = true

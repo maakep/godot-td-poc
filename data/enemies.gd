@@ -5,7 +5,7 @@ static var all = {
 		"ms": 120,
 		"hp": 150,
 		"sprite": preload("res://icon.svg"),
-		"resist": ["burn"],
+		"resist": [],
 		"flying": false,
 		"attributes": [],
 	},

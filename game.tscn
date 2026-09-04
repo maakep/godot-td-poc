@@ -167,5 +167,5 @@ offset_bottom = 345.0
 grow_horizontal = 0
 script = ExtResource("11_tower_inspector")
 
-[node name="GameResult" parent="CanvasLayer" instance=ExtResource("13_game_result")]
+[node name="GameResult" parent="CanvasLayer" unique_id=2077854677 instance=ExtResource("13_game_result")]
 visible = false

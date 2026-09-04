@@ -18,6 +18,10 @@ Gameplay and presentation are intentionally separate:
    interval, and damage values.
 4. Put the application resource in a projectile's `effects` array.
 
+Give definitions semantic `tags` to opt into central reactions. Current recipes
+are fire + oil, fire + poison, and impact + frost. Reaction outcomes are applied
+directly so they cannot recursively trigger themselves.
+
 Movement reduction and periodic damage need no new code. For unusual gameplay,
 subclass `StatusEffectBehavior` and assign the behavior to the definition.
 Behavior resources must remain stateless; per-target state belongs on the runtime.

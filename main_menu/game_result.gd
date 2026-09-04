@@ -33,11 +33,11 @@ func _show_result(won: bool) -> void:
 	var world := get_tree().current_scene
 	var player := world.get_node_or_null("Player")
 	var spawner := world.get_node_or_null("Spawner")
-	var faction: Dictionary = Factions.get_active_faction()
+	var faction_name := " + ".join(Factions.get_active_faction_names())
 
 	title.text = "VICTORY" if won else "DEFEAT"
 	title.add_theme_color_override("font_color", VICTORY_COLOR if won else DEFEAT_COLOR)
-	subtitle.text = "%s defended the realm." % faction.name if won else "%s was overrun." % faction.name
+	subtitle.text = "%s defended the realm." % faction_name if won else "%s was overrun." % faction_name
 	duration_value.text = _format_duration(player.get_run_duration_seconds()) if player else "--:--"
 	waves_value.text = "%d / %d" % [spawner.get_completed_wave_count(), Levels.all.size()] if spawner else "--"
 	towers_value.text = str(FactionProgress.towers_built_this_run)
