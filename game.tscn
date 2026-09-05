@@ -8,12 +8,14 @@
 [ext_resource type="Texture2D" uid="uid://c4m6sls4cwsx8" path="res://red.png" id="4_wx62v"]
 [ext_resource type="Script" uid="uid://humld8m62tgn" path="res://camera/camera_controls.gd" id="5_3wsd3"]
 [ext_resource type="Script" uid="uid://c7l3gmt7um1rw" path="res://spawn/spawner.gd" id="6_ufcjl"]
+[ext_resource type="Script" uid="uid://bp47v4hg1nd36" path="res://clouds.gd" id="7_7sc4i"]
 [ext_resource type="Script" uid="uid://w62ym3parlfc" path="res://player/player.gd" id="7_64int"]
 [ext_resource type="Script" uid="uid://bwptv50vdh3dl" path="res://gold_ui.gd" id="9_62qko"]
 [ext_resource type="Script" uid="uid://3wox2e51b375" path="res://ui/lives_ui.gd" id="10_215e1"]
 [ext_resource type="Script" uid="uid://dvbo4kq66vspy" path="res://ui/tower_ui_container.gd" id="10_hve3p"]
 [ext_resource type="Script" uid="uid://bdks3jvb17pts" path="res://ui/tower_inspector.gd" id="11_tower_inspector"]
 [ext_resource type="PackedScene" uid="uid://fy58n8kd1084" path="res://main_menu/game_result.tscn" id="13_game_result"]
+[ext_resource type="Script" uid="uid://btumpsjpc743l" path="res://effects/fog_of_war.gd" id="14_fog_of_war"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0kglt"]
 texture = ExtResource("1_3uhtl")
@@ -123,6 +125,17 @@ tile_size = Vector2i(64, 64)
 sources/0 = SubResource("TileSetAtlasSource_18k8o")
 sources/1 = SubResource("TileSetAtlasSource_oaanw")
 
+[sub_resource type="Gradient" id="Gradient_215e1"]
+offsets = PackedFloat32Array(0.004854369, 1)
+colors = PackedColorArray(0, 0, 0.0627451, 0.57254905, 0.22745098, 0.22745098, 0.22745098, 0)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_215e1"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7sc4i"]
+noise = SubResource("FastNoiseLite_215e1")
+color_ramp = SubResource("Gradient_215e1")
+seamless = true
+
 [node name="World" type="Node2D" unique_id=1532954454]
 
 [node name="Layers" type="Node2D" parent="." unique_id=45757744]
@@ -135,6 +148,12 @@ tile_set = SubResource("TileSet_4l8a7")
 
 [node name="MouseLayer" type="TileMapLayer" parent="Layers" unique_id=920859812]
 tile_set = SubResource("TileSet_e3ows")
+
+[node name="Clouds" type="Sprite2D" parent="Layers" unique_id=1319723467]
+position = Vector2(482.5, -119.00012)
+scale = Vector2(19.857422, 15.222657)
+texture = SubResource("NoiseTexture2D_7sc4i")
+script = ExtResource("7_7sc4i")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1217828709]
 position = Vector2(92, 90)
@@ -152,7 +171,11 @@ script = ExtResource("7_64int")
 
 [node name="Creeps" type="Node2D" parent="." unique_id=4532851]
 
+[node name="FogOfWar" type="CanvasLayer" parent="." unique_id=1080525352]
+script = ExtResource("14_fog_of_war")
+
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1208537759]
+layer = 2
 
 [node name="Gold" type="RichTextLabel" parent="CanvasLayer" unique_id=780512808]
 modulate = Color(0.870588, 0.752941, 0, 1)
