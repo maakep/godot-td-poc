@@ -1,5 +1,7 @@
 extends Node2D
 
+const TERRAIN := preload("res://misc/obstacle_painter.gd")
+
 @onready var tilemap: TileMapLayer = $"../Layers/TileMapLayer"
 @onready var mousemap: TileMapLayer = $"../Layers/MouseLayer"
 
@@ -17,7 +19,9 @@ var MAX_DISTANCE = 6
 
 
 func _ready():		
+	spawn_waypoint_flag(tilemap.local_to_map(Levels.waypoints[0]))
 	set_waypoint_random_position()
+
 	Events.on_enemy_destination_reached.connect(enemy_gone)
 	Events.on_enemy_killed.connect(enemy_gone)
 
@@ -56,7 +60,7 @@ func _input(e):
 				spawn()
 	
 func spawn_waypoint_flag(pos):
-	tilemap.set_cell(pos, 0, Vector2i(0, 0))
+	tilemap.set_cell(pos, TERRAIN.SOURCE_ID, TERRAIN.WAYPOINT_TILES.pick_random())
 
 func spawn():
 	lvl_active = true

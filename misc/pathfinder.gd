@@ -1,6 +1,12 @@
 extends Node
 class_name Pathfinder
 
+const TERRAIN := preload("res://misc/obstacle_painter.gd")
+
+## Set a nonnegative seed to reproduce a map while tuning its appearance.
+@export var generation_seed: int = -1
+@export_range(0.0, 1.0) var forest_chance := 0.5
+
 static var instance: Pathfinder
 
 var grid = AStarGrid2D.new()
@@ -8,32 +14,30 @@ var grid = AStarGrid2D.new()
 
 func _ready():
 	instance = self
+
 	grid.region = tilemap.get_used_rect()
 	grid.cell_size = Vector2(64, 64)
 	grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
 	
 	grid.update()
 	
-	var map = Levels.generate_obstacles(65, 57)
+	var seed_value := randi() if generation_seed < 0 else generation_seed
+	var map = Levels.generate_obstacles(65, 57, 0.4, 5, seed_value)
+
 	map.append_array([
 		Vector2i(-1, 0),
 		Vector2i(0, 1),
 		Vector2i(1, 0),
-		
 	])
 	
-	
-	for cell in map:
-		tilemap.set_cell(cell, 1, Vector2i(0, 0))
+	TERRAIN.paint(tilemap, map, seed_value, forest_chance)
 	
 	for cell in tilemap.get_used_cells():
 		var tile = tilemap.get_cell_tile_data(cell)
+
 		if tile and tile.get_custom_data("Obstacle"):
 			grid.set_point_solid(cell)
 
-	
-	
-	
 	Events.tower_built.connect(on_obstacle_added)
 	Events.on_obstacle_removed.connect(on_obstacle_removed)
 	
